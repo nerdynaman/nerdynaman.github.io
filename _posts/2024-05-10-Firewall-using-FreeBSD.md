@@ -2,6 +2,7 @@
 title: "Firewall Setup using PF"
 layout: post
 categories: media
+toc: true
 ---
 
 We will be creating a setup for a simple web application to be acessed via firewall that we will making using `PF` of FreeBSD.
