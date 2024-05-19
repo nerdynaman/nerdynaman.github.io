@@ -1,3 +1,9 @@
+---
+title: "Home"
+layout: default
+---
+
+
 <h2 align="center"> Hey there! I'm Naman Aggarwal. <img src="https://github.com/souvikguria98/souvikguria98/blob/master/Hi.gif" width="25"></h2>
 
 <img align="right" src="https://github.com/aridanemartin/aridanemartin/blob/main/Ari2.1.jpg" width="350">
