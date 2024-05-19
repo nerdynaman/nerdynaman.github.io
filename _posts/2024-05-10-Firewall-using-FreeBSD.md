@@ -1,10 +1,9 @@
 ---
 title: "Firewall Setup using PF"
 layout: post
+categories: media
 ---
 
-# Firewall Setup using PF
-## Objective
 We will be creating a setup for a simple web application to be acessed via firewall that we will making using `PF` of FreeBSD.
 
 ## Setup
@@ -25,7 +24,7 @@ The setup consists of three VMs, one acting as a firewall, second as a web serve
     - VM1 [**Client**] - 
         - Interface 1 [**Public IP**]: **10.8.0.1**
 ```properties 
-$ sudo ifconfig <interfaceName> 10.8.0.1/24
+sudo ifconfig <interfaceName> 10.8.0.1/24
 ```
 ![ping](./img/VM1setup.png){: style="height:300px;width:700px"}
 
@@ -33,15 +32,15 @@ $ sudo ifconfig <interfaceName> 10.8.0.1/24
         - Interface 1 [**Public IP**]: **10.8.0.2**
         - Interface 2 [**Private IP**]: **10.8.1.2**
 ```properties 
-$ sudo ifconfig <interface1Name> 10.8.0.2/24
-$ sudo ifconfig <interface2Name> 10.8.1.2/24
+sudo ifconfig <interface1Name> 10.8.0.2/24
+sudo ifconfig <interface2Name> 10.8.1.2/24
 ```
 ![ping](./img/VM2setup.png){: style="height:300px;width:700px"}
 
     - VM3 [**Webserver**] -
         - Interface 1 [**Private IP**]: **10.8.1.1**        
 ```properties
-$ sudo ifconfig <interfaceName> 10.8.1.1/24
+sudo ifconfig <interfaceName> 10.8.1.1/24
 ```
 ![ping](./img/VM3setup.png){: style="height:300px;width:700px"}
 
@@ -55,31 +54,31 @@ We will also enable **IPv4 forwarding** on the VM2 so that it can route the traf
 - On VM1 : <br>
 We need to change default gateway for accessing the VM3 to the VM2s interface 1 IP address so that the traffic goes through the VM2.
 ```properties
-$ sudo ip route add 10.8.1.0/24 via 10.8.0.2
+sudo ip route add 10.8.1.0/24 via 10.8.0.2
 // so that the traffic goes through the VM2 
-$ ping 10.8.0.2
+ping 10.8.0.2
 ```
 ![ping](./img/VM1ping.png){: style="height:300px;width:700px"} <br>
 We can also see the trace of the ping command from VM1 to VM3 using the following command:
 ```properties
-$ traceroute 10.8.1.1
+traceroute 10.8.1.1
 ```
 ![ping](./img/VM1trace.png){: style="height:100px;width:700px"}
 
 - On VM2 :
 ```properties
 // enable IPv4 forwarding on the VM2
-$ sudo sysctl net.inet.ip.forwarding=1 
-$ ping 10.8.0.1
-$ ping 10.8.1.1
+sudo sysctl net.inet.ip.forwarding=1 
+ping 10.8.0.1
+ping 10.8.1.1
 ```
 ![ping](./img/VM2ping.png){: style="height:300px;width:700px"}
 
 - On VM3 :
 ```properties
-$ sudo ip route add 10.8.0.0/24 via 10.8.1.2
+sudo ip route add 10.8.0.0/24 via 10.8.1.2
 // so that the response to any traffic goes through the VM2
-$ ping 10.8.1.2
+ping 10.8.1.2
 ```
 ![ping](./img/VM3ping.png){: style="height:300px;width:700px"}
 
@@ -112,12 +111,12 @@ gatway_enable="YES"
 ```
 Now we need to reload the PF using the following command:
 ```properties
-$ sudo pfctl -e 
-$ sudo pfctl -f /etc/pf.conf
+sudo pfctl -e 
+sudo pfctl -f /etc/pf.conf
 ```
 We can verify the nat and rdr rules using the following command:
 ```properties
-$ sudo pfctl -s nat
+sudo pfctl -s nat
 ```
 
 ![ping](./img/VM2pfTable.png){: style="height:100px;width:700px"}
@@ -126,7 +125,7 @@ $ sudo pfctl -s nat
 
 Now our firewall is configured and we can test the setup by accessing the web server from the client. Firstly for setting up the web server, we will be running the following command on the VM3:
 ```properties
-$ python3 -m http.server 80
+python3 -m http.server 80
 ```
 
 <!-- ![ping](./img/VM3server.png){: style="height:250px;width:900px"} -->
@@ -134,15 +133,15 @@ $ python3 -m http.server 80
 ### Testing the final setup
 Now we will try to access the web server from the client using the following command:
 ```properties
-$ wget 10.8.0.2
-$ wget 10.8.1.1 //to verify if access is blocked
+wget 10.8.0.2
+wget 10.8.1.1 //to verify if access is blocked
 ```
 
 ![ping](./img/VM1web.png){: style="height:170px;width:900px"}
 
 We can also verify access from firewall is also blocked from any other port such as 22 using the following command:
 ```properties
-$ ssh naman@10.8.1.1
+ssh naman@10.8.1.1
 ```
 
 ![ping](./img/VM1sshW.png){: style="height:120px;width:700px"}
@@ -158,7 +157,7 @@ After the configuration of the firewall, the access is blocked.
 
 We can also verify the working of the firewall by capturing the packets using the `tcpdump` command. We can use the following command to capture the packets:
 ```properties
-$ sudo tcpdump -i <interfaceName> -w output.pcap
+sudo tcpdump -i <interfaceName> -w output.pcap
 ```
 We captured the packets on the VM1, both interface of VM2 and VM3.
 
