@@ -240,7 +240,7 @@ On the FTP server we can see the following logs:
     Apr  1 07:56:13 instance-main-server sudo:   raft-1 : TTY=pts/0 ; PWD=/home/raft-1 ; USER=root ; COMMAND=/usr/bin/vim /var/log/auth.log
     ```
 
-![ftpLog](/assets/img-kerberos/kerbAuthLogin.png){: style="height:90px;width:100%"}
+![ftpLog](/assets/img-kerberos/KerbAuthLogin.png){: style="height:90px;width:100%"}
 
 ![ftpLog](/assets/img-kerberos/kerbAuthLog.png)
 
