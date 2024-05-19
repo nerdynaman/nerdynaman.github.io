@@ -133,10 +133,10 @@ python3 -m http.server 80
 
 ### Testing the final setup
 Now we will try to access the web server from the client using the following command:
-```bash
+{% highlight bash %}
 wget 10.8.0.2
 wget 10.8.1.1 //to verify if access is blocked
-```
+{% endhighlight %}
 
 ![ping](/img/VM1web.png){: style="height:170px;width:900px"}
 
