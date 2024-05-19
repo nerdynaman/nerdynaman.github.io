@@ -292,9 +292,9 @@ root@3bef94073c7b:/# curl -x socks4a://127.0.0.1:9004 192.168.0.7:8080
 
 `curl -x socks4a://{ip_addr}:{port} {url}` here -x is used to specify the proxy and socks4a is the protocol used for the proxy, {ip_addr} and {port} are the ip address and port of the tor relay and {url} is the url of the webpage to be fetched.
 
-![tor](/assets/img-Tor/clientCurl.png)
+<!-- ![tor](/assets/img-Tor/clientCurl.png) -->
 
-[image](/assets/img-Tor/clientCurl.png)
+[screenshot](/assets/img-Tor/clientCurl.png)
 
 We can also try to fetch the webpage using by setting up custom tor circuit and attaching the stream to it using the script from previous part by changing the the url of webpage to `192.168.0.7:8080` and socks port to `9004` in the script.
 
@@ -326,9 +326,9 @@ Custom Circuit Path:
 </html>
 ```
 
-![tor](/assets/img-Tor/clientCurlScript.png)
+<!-- ![tor](/assets/img-Tor/clientCurlScript.png) -->
 
-[image](/assets/img-Tor/clientCurlScript.png)
+[screenshot](/assets/img-Tor/clientCurlScript.png)
 
 ### Server
 
@@ -345,15 +345,15 @@ Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...
 
 `192.168.0.6` is the client and `192.168.0.5` is the exit node for private tor setup.
 
-![tor](/assets/img-Tor/server.png)
+<!-- ![tor](/assets/img-Tor/server.png) -->
 
-[image](/assets/img-Tor/server.png)
+[screenshot](/assets/img-Tor/server.png)
 
 ## Network traffic
 
 ### Client
 #### Without tor
-```plaintext
+```pcap
 root@3bef94073c7b:/# tcpdump -n -i eth0 'src host 192.168.0.7 or dst 192.168.0.7'
 tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
 listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
@@ -376,9 +376,9 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 0 packets dropped by kernel
 root@3bef94073c7b:/#
 ```
-![tor](/assets/img-Tor/clientNetPac.png)
+<!-- ![tor](/assets/img-Tor/clientNetPac.png) -->
 
-[image](/assets/img-Tor/clientNetPac.png)
+[screenshot](/assets/img-Tor/clientNetPac.png)
 
 #### With tor
 ```plaintext
@@ -402,9 +402,9 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 12:04:36.908541 IP 192.168.0.6.60400 > 192.168.0.3.5001: Flags [.], ack 2145, win 501
 12:04:36.909346 IP 192.168.0.6.60400 > 192.168.0.3.5001: Flags [P.], seq 2144:2680, ack 2145, win 501
 ```
-![tor](/assets/img-Tor/clientNetPacTor.png)
+<!-- ![tor](/assets/img-Tor/clientNetPacTor.png) -->
 
-[image](/assets/img-Tor/clientNetPacTor.png)
+[screenshot](/assets/img-Tor/clientNetPacTor.png)
 
 ### Server
 
@@ -433,9 +433,9 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 16 packets captured
 16 packets received by filter
 ```
-![tor](/assets/img-Tor/serverNetPac.png)
+<!-- ![tor](/assets/img-Tor/serverNetPac.png) -->
 
-[image](/assets/img-Tor/serverNetPac.png)
+[screenshot](/assets/img-Tor/serverNetPac.png)
 
 #### With tor
 ```plaintext
@@ -461,9 +461,9 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 root@a940ce91878d:/#
 ```
 
-![tor](/assets/img-Tor/serverNetPacTor.png)
+<!-- ![tor](/assets/img-Tor/serverNetPacTor.png) -->
 
-[image](/assets/img-Tor/serverNetPacTor.png)
+[screenshot](/assets/img-Tor/serverNetPacTor.png)
 
 ## Some more TOR configs
 Script used to build custom tor circuit and fetch webpage is already mentioned in the previous part.
