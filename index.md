@@ -3,8 +3,8 @@ title: "Home"
 layout: default
 ---
 
+Hi, I'm Naman Aggarwal, a Front-end Developer 🚀 from India, currently, I'm a Front-end Developer at Openbank. Beside's programming, I enjoy playing music and traveling.
 
-<h2 align="center"> Hey there! I'm Naman Aggarwal. <img src="https://github.com/souvikguria98/souvikguria98/blob/master/Hi.gif" width="25"></h2>
 
 <img align="right" src="https://github.com/aridanemartin/aridanemartin/blob/main/Ari2.1.jpg" width="350">
 
