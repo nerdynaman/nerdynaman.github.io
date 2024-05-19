@@ -1,0 +1,63 @@
+version: '3.8'
+# containers are created from a image based out of ubuntu with tor installed
+# image can be created using the Dockerfile provided in the repository
+# services to be created involves various conatiners running tor, corresponding to every relay their torrc file and tor directory is mounted to the container
+# they also have a static ip address
+services:
+  container1:
+    image: alpine_tor
+    volumes:
+      - ./torrcA:/etc/tor/torrc
+      - ./torDirA:/torDir
+    networks:
+      alpine_network:
+        ipv4_address: 192.168.0.2
+
+  container2:
+    image: alpine_tor
+    volumes:
+      - ./torrcB:/etc/tor/torrc
+      - ./torDirB:/torDir
+    networks:
+      alpine_network:
+        ipv4_address: 192.168.0.3
+
+  container3:
+    image: alpine_tor
+    volumes:
+      - ./torrcC:/etc/tor/torrc
+      - ./torDirC:/torDir
+    networks:
+      alpine_network:
+        ipv4_address: 192.168.0.4
+
+  container4:
+    image: alpine_tor
+    volumes:
+      - ./torrcD:/etc/tor/torrc
+    networks:
+      alpine_network:
+        ipv4_address: 192.168.0.5
+
+  container5:
+    image: alpine_tor
+    volumes:
+      - ./torrcE:/etc/tor/torrc
+    networks:
+      alpine_network: 
+        ipv4_address: 192.168.0.6
+
+  container6:
+    image: alpine_tor
+    networks:
+      alpine_network:
+        ipv4_address: 192.168.0.7
+
+# network to be created with a subnet and gateway so that all conatiners can communicate with each other
+networks:
+  alpine_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24
+          gateway: 192.168.0.1

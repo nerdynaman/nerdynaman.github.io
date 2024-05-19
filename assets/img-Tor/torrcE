@@ -1,0 +1,27 @@
+TestingTorNetwork 1
+
+PathsNeededToBuildCircuits 0.67
+TestingDirAuthVoteExit *
+TestingDirAuthVoteHSDir *
+V3AuthNIntervalsValid 2
+
+TestingDirAuthVoteGuard *
+TestingMinExitFlagThreshold 0
+
+DataDirectory /torDir
+ConnLimit 60
+Nickname test004c
+ShutdownWaitLength 2
+DisableDebuggerAttachment 0
+
+ControlPort 9051
+
+ProtocolWarnings 1
+SafeLogging 0
+LogTimeGranularity 1
+
+DirAuthority test000a orport=5000 no-v2 v3ident=387760FC480CF6AA92D5F341E013FB208EC8FD19 192.168.0.2:7000 BC1A08575F04F04F1372FF7B40154AC99BC9052E
+DirAuthority test001a orport=5001 no-v2 v3ident=812A1F8C5C2719EA2FA4D547B4E15A985A9B6B00 192.168.0.3:7001 A7EEFCAFDEE3ADE163BE0F0D136A95C42C486FCD
+DirAuthority test002a orport=5002 no-v2 v3ident=BD88184E3FB42563A32A5127D215B343AEC6D759 192.168.0.4:7002 BE32764C49B25FB9649DF54B08117BA7E12C5428
+
+SocksPort 9004
