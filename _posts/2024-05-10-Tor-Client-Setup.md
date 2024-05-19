@@ -1,4 +1,9 @@
-# Tor Client Setup
+---
+title: "Tor Client Setup"
+layout: post
+toc: true
+---
+
 
 ## Building tor node from source code
 
@@ -11,7 +16,7 @@
 - Copy sample configuration file to `/usr/local/etc/tor/torrc` using `cp /usr/local/etc/tor/torrc.sample /usr/local/etc/tor/torrc`
 - Run tor using `tor`
 
-```properties
+```bash
 git clone https://github.com/torproject/tor.git
 sudo apt-get libevent-dev libssl-dev zlib1g zlib1g-dev
 ./autogen.sh
@@ -145,7 +150,9 @@ with Controller.from_port(port = 9051) as controller:
 ## Demonstration
 
 - We first fetch the ip address of the last relay in the current circuit then we create a new tor circuit and fetch the ip address of the last relay in the new circuit. We can compare the ip address of the last relay in the new circuit with the ip address of the last relay in the current circuit to verify if the new circuit is created successfully.
-```sh
+
+
+```bash
 naman@naman1:~/torScripts$ curl -x socks4://127.0.0.1:9000 ifconfig.io
     192.42.116.187
 
