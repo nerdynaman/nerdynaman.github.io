@@ -23,7 +23,7 @@ The setup consists of three VMs, one acting as a firewall, second as a web serve
 - For experiment purposes, we will be using the following Network Configuration:
     - VM1 [**Client**] - 
         - Interface 1 [**Public IP**]: **10.8.0.1**
-```properties 
+```bash 
 sudo ifconfig <interfaceName> 10.8.0.1/24
 ```
 ![ping](./img/VM1setup.png){: style="height:300px;width:700px"}
@@ -31,7 +31,7 @@ sudo ifconfig <interfaceName> 10.8.0.1/24
     - VM2 [**Firewall**] -
         - Interface 1 [**Public IP**]: **10.8.0.2**
         - Interface 2 [**Private IP**]: **10.8.1.2**
-```properties 
+```bash 
 sudo ifconfig <interface1Name> 10.8.0.2/24
 sudo ifconfig <interface2Name> 10.8.1.2/24
 ```
@@ -39,7 +39,7 @@ sudo ifconfig <interface2Name> 10.8.1.2/24
 
     - VM3 [**Webserver**] -
         - Interface 1 [**Private IP**]: **10.8.1.1**        
-```properties
+```bash
 sudo ifconfig <interfaceName> 10.8.1.1/24
 ```
 ![ping](./img/VM3setup.png){: style="height:300px;width:700px"}
@@ -53,20 +53,20 @@ We will also enable **IPv4 forwarding** on the VM2 so that it can route the traf
 
 - On VM1 : <br>
 We need to change default gateway for accessing the VM3 to the VM2s interface 1 IP address so that the traffic goes through the VM2.
-```properties
+```bash
 sudo ip route add 10.8.1.0/24 via 10.8.0.2
 // so that the traffic goes through the VM2 
 ping 10.8.0.2
 ```
 ![ping](./img/VM1ping.png){: style="height:300px;width:700px"} <br>
 We can also see the trace of the ping command from VM1 to VM3 using the following command:
-```properties
+```bash
 traceroute 10.8.1.1
 ```
 ![ping](./img/VM1trace.png){: style="height:100px;width:700px"}
 
 - On VM2 :
-```properties
+```bash
 // enable IPv4 forwarding on the VM2
 sudo sysctl net.inet.ip.forwarding=1 
 ping 10.8.0.1
@@ -75,7 +75,7 @@ ping 10.8.1.1
 ![ping](./img/VM2ping.png){: style="height:300px;width:700px"}
 
 - On VM3 :
-```properties
+```bash
 sudo ip route add 10.8.0.0/24 via 10.8.1.2
 // so that the response to any traffic goes through the VM2
 ping 10.8.1.2
@@ -87,7 +87,7 @@ We have successfully tested the basic setup and also VMs are able to communicate
 
 ### PF Configuration
 For configuring the PF, we need to edit the `/etc/pf.conf` file. If this file is not present, we can create it. We will be adding the following rules to the file:
-```properties
+```bash
 # adding entries for doing DNAT
 rdr pass on vtnet0 proto tcp to any port 80 -> 10.8.1.1 port 80
 rdr pass on vtnet0 proto tcp to any port 443 -> 10.8.1.1 port 443
@@ -104,18 +104,18 @@ block in on vtnet0 proto tcp from any to 10.8.1.0/24 port {80, 443}
 ```
 
 Now add following lines to the `/etc/rc.conf` file to enable the PF:
-```properties
+```bash
 pf_enable=yes
 pf_rules="/etc/pf.conf"
 gatway_enable="YES"
 ```
 Now we need to reload the PF using the following command:
-```properties
+```bash
 sudo pfctl -e 
 sudo pfctl -f /etc/pf.conf
 ```
 We can verify the nat and rdr rules using the following command:
-```properties
+```bash
 sudo pfctl -s nat
 ```
 
@@ -124,7 +124,7 @@ sudo pfctl -s nat
 ### Setting up the web server
 
 Now our firewall is configured and we can test the setup by accessing the web server from the client. Firstly for setting up the web server, we will be running the following command on the VM3:
-```properties
+```bash
 python3 -m http.server 80
 ```
 
@@ -132,7 +132,7 @@ python3 -m http.server 80
 
 ### Testing the final setup
 Now we will try to access the web server from the client using the following command:
-```properties
+```bash
 wget 10.8.0.2
 wget 10.8.1.1 //to verify if access is blocked
 ```
@@ -140,7 +140,7 @@ wget 10.8.1.1 //to verify if access is blocked
 ![ping](./img/VM1web.png){: style="height:170px;width:900px"}
 
 We can also verify access from firewall is also blocked from any other port such as 22 using the following command:
-```properties
+```bash
 ssh naman@10.8.1.1
 ```
 
@@ -156,7 +156,7 @@ After the configuration of the firewall, the access is blocked.
 ## Network packet capture
 
 We can also verify the working of the firewall by capturing the packets using the `tcpdump` command. We can use the following command to capture the packets:
-```properties
+```bash
 sudo tcpdump -i <interfaceName> -w output.pcap
 ```
 We captured the packets on the VM1, both interface of VM2 and VM3.
