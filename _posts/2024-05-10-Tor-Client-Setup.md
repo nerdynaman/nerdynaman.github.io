@@ -37,7 +37,7 @@ We will use firefox browser to use tor. Change the following settings in firefox
 	- `network.proxy.socks_remote_dns` to `true`
 
 <!-- image -->
-![Tor Browser](/assets/img-Tor/image/image1.png){: style="width:100%"}
+![Tor Browser](/assets/img-Tor/image1.png){: style="width:100%"}
 
 ## Setting up custom tor circuit
 
@@ -170,7 +170,7 @@ Custom Circuit Path:
 ```
 Our script after building the new circuit attaches the stream to the new circuit and does a request to ifconfig.io/ip . We are able to see the ip for the relay we mentioned as exit node while building the circuit. This means our new circuit is created successfully.
 <br><br>
-![demonstration](/assets/img-Tor/image/imageMain.png){: style="width:100%"}
+![demonstration](/assets/img-Tor/imageMain.png){: style="width:100%"}
 
 
 <!-- To use newly created tor circuit in the browser, we can delete the default tor circuit and use the newly created tor circuit. The following python script will delete the default tor circuit and use the newly created tor circuit.
