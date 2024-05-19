@@ -4,6 +4,8 @@ layout: post
 toc: true
 ---
 
+We will setup a tor client and use it to create custom tor circuits. We will use `stem` library to control tor client and create custom tor circuits. We will also use `requests` library to fetch data using the custom tor circuit. We can configure the browser to use tor client through socks proxy and use the custom tor circuit to fetch data.
+
 
 ## Building tor node from source code
 
