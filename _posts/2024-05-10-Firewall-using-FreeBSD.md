@@ -205,6 +205,7 @@ They are used to define the behavior of how will the packet be processed.
 
 - **POSTROUTING**
 
+
 ``` mermaid
 graph LR
   A[Network] -->|PREROUTING| B{Routing Decision};
@@ -212,8 +213,9 @@ graph LR
     B -->|FORWARDING| E;
     C -->|OUTPUT| D{Routing Decision};
     D -->|POSTROUTING| E[Network];
-    
 ```
+
+
 ### NetFilter
 **NetFilter** is a framework that provides these hooks to the kernel. **iptables** and **nftables** uses these hooks to define the behavior of the packet.<br> There are also **chains** used in the iptables and nftables to define the behavior of the packet. The chains are nothing but the list of rules that are to be applied at a hook.<br> There are various **tables** such as **filter**, **nat**, **mangle** etc. which provide these rules and are used to define the behavior of the packet at a particular hook. 
 
