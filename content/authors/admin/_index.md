@@ -43,7 +43,7 @@ skills:
       - name: Java
         description: ''
         percent: 70
-        icon: java
+        icon: custom/java
       - name: Shell Scripting
         description: ''
         percent: 60
