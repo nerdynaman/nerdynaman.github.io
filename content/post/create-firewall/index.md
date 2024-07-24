@@ -1,7 +1,7 @@
 ---
 title: "Firewall Setup using PF"
 summary: We will be creating a setup for a simple web application to be acessed via firewall that we will making using `PF` of FreeBSD.
-date: 2020-10-27
+date: 2023-10-27
 
 image:
   caption: 'Image credit: [**Unsplash**](https://unsplash.com)'
@@ -19,10 +19,12 @@ tags:
 
 Welcome 👋
 
-{{< toc mobile_only=true is_open=true >}}
+<!-- {{< toc mobile_only=true is_open=true >}} -->
 
 
-<!-- ## Setup -->
+## Setup
+
+We will be creating a setup for a simple web application to be acessed via firewall that we will making using `PF` of FreeBSD.
 
 ### Description
 The setup consists of three VMs, one acting as a firewall, second as a web server and third as a client. The firewall will be running `PF` and will be configured to allow access to the web server from the client. The web server will be running `python -m http.server` and will be serving a simple web page. The client will be running `curl` to access the web page from the web server.
