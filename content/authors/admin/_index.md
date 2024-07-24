@@ -83,7 +83,7 @@ skills:
       - name: Django
         description: ''
         percent: 
-        icon: custom/django
+        icon: 
       - name: Message Queue
         description: ''
         percent: 
