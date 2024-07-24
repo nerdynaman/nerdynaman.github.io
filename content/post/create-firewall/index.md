@@ -17,10 +17,6 @@ tags:
   - Security
 ---
 
-Welcome 👋
-
-{{< toc mobile_only=true is_open=true >}}
-
 
 ## Setup
 
@@ -220,8 +216,7 @@ They are used to define the behavior of how will the packet be processed.
 - **POSTROUTING**
 
 
-``` mermaid
-graph LR
+```
   A[Network] -->|PREROUTING| B{Routing Decision};
     B -->|INPUT| C[Process];
     B -->|FORWARDING| E;
