@@ -66,10 +66,10 @@ skills:
         description: ''
         percent: 70
         icon: custom/docker
-      - name: Kubernetes
+      - name: K8s
         description: ''
         percent: 60
-        icon: custom/K8s
+        icon: custom/kubernetes
       - name: Airflow
         description: ''
         percent: 60
