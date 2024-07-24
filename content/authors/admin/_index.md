@@ -32,7 +32,7 @@ organizations:
 skills:
   - name: Languages
     items:
-      - name: C/C++
+      - name: C /C++
         description: ''
         percent: 90
         icon: custom/c
@@ -54,41 +54,41 @@ skills:
         icon: circle-stack
   - name: Technical Skills
     items:
-      - name: Apache Spark
+      - name: Spark
         description: ''
         percent: 70
-        icon: spark
+        icon: custom/spark
       - name: Git
         description: ''
         percent: 80
-        icon: git
+        icon: custom/git
       - name: Docker
         description: ''
         percent: 70
-        icon: docker
+        icon: custom/docker
       - name: Kubernetes
         description: ''
         percent: 60
-        icon: kubernetes
-      - name: Apache Airflow
+        icon: custom/kubernetes
+      - name: Airflow
         description: ''
         percent: 60
-        icon: airflow
+        icon: custom/airflow
       - name: Grafana
         description: ''
         percent: 60
-        icon: grafana
+        icon: custom/grafana
   - name: 
     items:
-      - name: 
+      - name: ''
         description: ''
         percent: 
         icon: 
       - name: Django
         description: ''
         percent: 
-        icon: django
-      - name: Messaging Queues
+        icon: custom/django
+      - name: Message Queue
         description: ''
         percent: 
         icon: message
