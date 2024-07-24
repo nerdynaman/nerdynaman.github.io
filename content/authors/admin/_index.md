@@ -30,8 +30,12 @@ organizations:
 # Skills
 # Add your own SVG icons to `assets/media/icons/`
 skills:
-  - name: Technical Skills
+  - name: Languages
     items:
+      - name: C/C++
+        description: ''
+        percent: 90
+        icon: c
       - name: Python
         description: ''
         percent: 80
@@ -40,22 +44,66 @@ skills:
         description: ''
         percent: 70
         icon: java
-      - name: C/C++
-        description: ''
-        percent: 75
-        icon: c
       - name: Shell Scripting
         description: ''
         percent: 60
         icon: code-bracket
-      - name: Git
-        description: ''
-        percent: 70
-        icon: bootstrap/git
       - name: SQL
         description: ''
         percent: 40
         icon: circle-stack
+  - name: Technical Skills
+    items:
+      - name: Apache Spark
+        description: ''
+        percent: 70
+        icon: spark
+      - name: Git
+        description: ''
+        percent: 80
+        icon: git
+      - name: Docker
+        description: ''
+        percent: 70
+        icon: docker
+      - name: Kubernetes
+        description: ''
+        percent: 60
+        icon: kubernetes
+      - name: Apache Airflow
+        description: ''
+        percent: 60
+        icon: airflow
+      - name: Grafana
+        description: ''
+        percent: 60
+        icon: grafana
+  - name: 
+    items:
+      - name: Django
+        description: ''
+        percent: 
+        icon: django
+      - name: Messaging Queues
+        description: ''
+        percent: 
+        icon: message
+      - name: Grpc
+        description: ''
+        percent: 
+        icon: grpc
+      - name: Object Oriented Programming
+        description: ''
+        percent: 
+        icon: object-oriented-programming
+      - name: Tor
+        description: ''
+        percent: 
+        icon: tor
+      - name: Wireshark
+        description: ''
+        percent: 
+        icon: wireshark
   # - name: Hobbies
   #   color: '#eeac02'
   #   color_border: '#f0bf23'
