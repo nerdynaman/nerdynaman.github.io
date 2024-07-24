@@ -52,7 +52,7 @@ skills:
         description: ''
         percent: 40
         icon: circle-stack
-  - name: Technical Skills
+  - name: Tools
     items:
       - name: Spark
         description: ''
@@ -69,7 +69,7 @@ skills:
       - name: Kubernetes
         description: ''
         percent: 60
-        icon: custom/kubernetes
+        icon: custom/K8s
       - name: Airflow
         description: ''
         percent: 60
@@ -80,10 +80,6 @@ skills:
         icon: custom/grafana
   - name: 
     items:
-      - name: ''
-        description: ''
-        percent: 
-        icon: 
       - name: Django
         description: ''
         percent: 
@@ -91,23 +87,23 @@ skills:
       - name: Message Queue
         description: ''
         percent: 
-        icon: message
+        icon: custom/message
       - name: Grpc
         description: ''
         percent: 
-        icon: grpc
+        icon: custom/grpc
       - name: OOPS
         description: ''
         percent: 
-        icon: object-oriented-programming
+        icon: custom/oops
       - name: Tor
         description: ''
         percent: 
-        icon: tor
+        icon: custom/tor
       - name: Wireshark
         description: ''
         percent: 
-        icon: wireshark
+        icon: custom/wireshark
   # - name: Hobbies
   #   color: '#eeac02'
   #   color_border: '#f0bf23'
