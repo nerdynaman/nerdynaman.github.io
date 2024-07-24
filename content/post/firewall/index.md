@@ -2,14 +2,26 @@
 title: "Firewall Setup using PF"
 summary: We will be creating a setup for a simple web application to be acessed via firewall that we will making using `PF` of FreeBSD.
 date: 2024-10-27
+
+image:
+  caption: 'Image credit: [**Unsplash**](https://unsplash.com)'
+
+
 authors:
+  - admin
   - naman
+
 tags:
   - Firewall
   - PF tables
   - Security
   - Networking
 ---
+
+Welcome 👋
+
+{{< toc mobile_only=true is_open=true >}}
+
 
 ## Setup
 
