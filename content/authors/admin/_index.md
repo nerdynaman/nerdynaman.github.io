@@ -56,7 +56,7 @@ skills:
         description: ''
         percent: 60
         icon: custom/grafana
-  - name: 
+  - name: Tools
     items:
       - name: ''
         description: ''
