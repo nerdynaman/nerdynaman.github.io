@@ -30,28 +30,6 @@ organizations:
 # Skills
 # Add your own SVG icons to `assets/media/icons/`
 skills:
-  - name: Languages
-    items:
-      - name: C /C++
-        description: ''
-        percent: 90
-        icon: code-bracket
-      - name: Python
-        description: ''
-        percent: 80
-        icon: python
-      - name: Java
-        description: ''
-        percent: 70
-        icon: custom/java
-      - name: Shell Scripting
-        description: ''
-        percent: 60
-        icon: code-bracket
-      - name: SQL
-        description: ''
-        percent: 40
-        icon: circle-stack
   - name: Tools
     items:
       - name: Spark
@@ -108,6 +86,29 @@ skills:
         description: ''
         percent: 10
         icon: 
+  
+  - name: Languages
+    items:
+      - name: C /C++
+        description: ''
+        percent: 90
+        icon: code-bracket
+      - name: Python
+        description: ''
+        percent: 80
+        icon: python
+      - name: Java
+        description: ''
+        percent: 70
+        icon: custom/java
+      - name: Shell Scripting
+        description: ''
+        percent: 60
+        icon: code-bracket
+      - name: SQL
+        description: ''
+        percent: 40
+        icon: circle-stack
   # - name: Hobbies
   #   color: '#eeac02'
   #   color_border: '#f0bf23'
