@@ -1,14 +1,11 @@
 ---
 title: "Firewall Setup using PF"
 summary: We will be creating a setup for a simple web application to be acessed via firewall that we will making using `PF` of FreeBSD.
-date: 2023-10-27
-
-image:
-  caption: 'Image credit: [**Unsplash**](https://unsplash.com)'
-
+date: 2024-02-04
 
 authors:
   - admin
+  - naman
 
 tags:
   - Firewall
@@ -147,10 +144,8 @@ python3 -m http.server 80
 
 ### Testing the final setup
 Now we will try to access the web server from the client using the following command:
-{% highlight bash %}
 wget 10.8.0.2
 wget 10.8.1.1 //to verify if access is blocked
-{% endhighlight %}
 
 ![ping](./img-Firewall-using-FreeBSD/VM1web.png?width=900px&height=170)
 
