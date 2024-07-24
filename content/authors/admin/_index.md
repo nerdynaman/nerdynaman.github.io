@@ -51,7 +51,7 @@ skills:
       - name: Git
         description: ''
         percent: 70
-        icon: git
+        icon: bootstrap/git
       - name: SQL
         description: ''
         percent: 40
