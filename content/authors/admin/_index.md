@@ -35,7 +35,7 @@ skills:
       - name: C /C++
         description: ''
         percent: 90
-        icon: custom/c
+        icon: code-bracket
       - name: Python
         description: ''
         percent: 80
@@ -69,7 +69,7 @@ skills:
       - name: K8s
         description: ''
         percent: 60
-        icon: custom/kubernetes
+        icon: wheel
       - name: Airflow
         description: ''
         percent: 60
