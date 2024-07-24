@@ -1,7 +1,7 @@
 ---
 title: Raft
 date: 2024-02-10
-external_link: https://github.com/nerdynaman/RaftConsesusAlgo/commits/main/
+# external_link: https://github.com/nerdynaman/RaftConsesusAlgo/commits/main/
 tags:
   - Consensus Algorithm
   - Raft
