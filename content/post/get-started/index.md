@@ -18,69 +18,46 @@ tags:
   - Markdown
 ---
 
-Welcome 👋
 
-{{< toc mobile_only=true is_open=true >}}
+### Description
+The setup consists of three VMs, one acting as a firewall, second as a web server and third as a client. The firewall will be running `PF` and will be configured to allow access to the web server from the client. The web server will be running `python -m http.server` and will be serving a simple web page. The client will be running `curl` to access the web page from the web server.
 
-## Overview
+### Basic VM configuration
+- VMs have their network interfaces configured to **host only** mode.
+- VM1 [**Client**] and VM3[**Webserver**] are configured with 1 CPU, 1024 MB RAM, 1 network interface and Ubuntu.
+- VM2 has 2 network interfaces and runs on top of FreeBSD with other configurations same as VM1 and VM3.
 
-1. The Hugo Blox website builder for Hugo, along with its starter templates, is designed for professional creators, educators, and teams/organizations - although it can be used to create any kind of site
-2. The template can be modified and customised to suit your needs. It's a good platform for anyone looking to take control of their data and online identity whilst having the convenience to start off with a **no-code solution (write in Markdown and customize with YAML parameters)** and having **flexibility to later add even deeper personalization with HTML and CSS**
-3. You can work with all your favourite tools and apps with hundreds of plugins and integrations to speed up your workflows, interact with your readers, and much more
+- - The first network interface has a public IP address which can be accessed by clients/external network to visit the web server.
 
-[//]: # ([![The template is mobile first with a responsive design to ensure that your site looks stunning on every device.]&#40;https://raw.githubusercontent.com/wowchemy/wowchemy-hugo-modules/main/starters/academic/preview.png&#41;]&#40;https://hugoblox.com&#41;)
+- - The second network interface has a private IP address and is there for the **firewall** to access the web server. Web servers and other services which are to be accessed by users are behind the firewall so shouldnt be accessible from outside without going through the firewall.
 
-### Get Started
+- For experiment purposes, we will be using the following Network Configuration:
+    - VM1 [**Client**] - 
+        - Interface 1 [**Public IP**]: **10.8.0.1**
+```bash 
+sudo ifconfig <interfaceName> 10.8.0.1/24
+```
+![ping](./img-Firewall-using-FreeBSD/VM1setup.png){: style="height:300px;width:700px"}
 
-- 👉 [**Create a new site**](https://hugoblox.com/templates/)
-- 📚 [**Personalize your site**](https://docs.hugoblox.com/)
-- 💬 [Chat with the **Hugo Blox community**](https://discord.gg/z8wNYzb) or [**Hugo community**](https://discourse.gohugo.io)
-- 🐦 Twitter: [@GetResearchDev](https://twitter.com/GetResearchDev) [@GeorgeCushen](https://twitter.com/GeorgeCushen) #MadeWithHugoBlox
-- 💡 [Request a **feature** or report a **bug** for _Hugo Blox_](https://github.com/HugoBlox/hugo-blox-builder/issues)
-- ⬆️ **Updating Hugo Blox?** View the [Update Guide](https://docs.hugoblox.com/reference/update/) and [Release Notes](https://github.com/HugoBlox/hugo-blox-builder/releases)
+    - VM2 [**Firewall**] -
+        - Interface 1 [**Public IP**]: **10.8.0.2**
+        - Interface 2 [**Private IP**]: **10.8.1.2**
+```bash 
+sudo ifconfig <interface1Name> 10.8.0.2/24
+sudo ifconfig <interface2Name> 10.8.1.2/24
+```
+![ping](./img-Firewall-using-FreeBSD/VM2setup.png){: style="height:300px;width:700px"}
 
-## Crowd-funded open-source software
+    - VM3 [**Webserver**] -
+        - Interface 1 [**Private IP**]: **10.8.1.1**        
+```bash
+sudo ifconfig <interfaceName> 10.8.1.1/24
+```
+![ping](./img-Firewall-using-FreeBSD/VM3setup.png){: style="height:300px;width:700px"}
 
-To help us develop this template and software sustainably under the MIT license, we ask all individuals and businesses that use it to help support its ongoing maintenance and development via sponsorship.
+Above configuration depicts that client and one interface of firewall are in the same network and the other interface of firewall and webserver are in the same network. The firewall will be used to route the traffic from client to webserver.
 
-### [❤️ Click here to become a sponsor and help support Hugo Blox's future ❤️](https://hugoblox.com/sponsor/)
-
-As a token of appreciation for sponsoring, you can **unlock [these](https://hugoblox.com/sponsor/) awesome rewards and extra features 🦄✨**
-
-## Ecosystem
-
-- **[Bibtex To Markdown](https://github.com/GetRD/academic-file-converter):** Automatically import publications from BibTeX
-
-## Inspiration
-
-[Learn what other **creators**](https://hugoblox.com/creators/) are building with this template.
-
-## Features
-
-- **Page builder** - Create _anything_ with no-code [**blocks**](https://hugoblox.com/blocks/) and [**elements**](https://docs.hugoblox.com/reference/markdown/)
-- **Edit any type of content** - Blog posts, publications, talks, slides, projects, and more!
-- **Create content** in [**Markdown**](https://docs.hugoblox.com/reference/markdown/), [**Jupyter**](https://docs.hugoblox.com/getting-started/cms/), or [**RStudio**](https://docs.hugoblox.com/getting-started/cms/)
-- **Plugin System** - Fully customizable [**color** and **font themes**](https://docs.hugoblox.com/getting-started/customize/)
-- **Display Code and Math** - Code syntax highlighting and LaTeX math supported
-- **Integrations** - [Google Analytics](https://analytics.google.com), [Disqus commenting](https://disqus.com), Maps, Contact Forms, and more!
-- **Beautiful Site** - Simple and refreshing one-page design
-- **Industry-Leading SEO** - Help get your website found on search engines and social media
-- **Media Galleries** - Display your images and videos with captions in a customizable gallery
-- **Mobile Friendly** - Look amazing on every screen with a mobile friendly version of your site
-- **Multi-language** - 35+ language packs including English, 中文, and Português
-- **Multi-user** - Each author gets their own profile page
-- **Privacy Pack** - Assists with GDPR
-- **Stand Out** - Bring your site to life with animation, parallax backgrounds, and scroll effects
-- **One-Click Deployment** - No servers. No databases. Only files.
-
-## Themes
-
-Hugo Blox and its templates come with **automatic day (light) and night (dark) mode** built-in. Visitors can choose their preferred mode by clicking the sun/moon icon in the header.
-
-[Choose a stunning **theme** and **font**](https://docs.hugoblox.com/getting-started/customize/) for your site. Themes are fully customizable.
-
-## License
-
-Copyright 2016-present [George Cushen](https://georgecushen.com).
-
-Released under the [MIT](https://github.com/HugoBlox/hugo-blox-builder/blob/main/LICENSE.md) license.
+## Testing the basic setup
+We have two different subnets in our setup, for the meanwhile we will try to make the VMs communicate with each other across the subnets. We will try to ping the VM3 from VM1 and vice versa. For this as we know VM2 is present in both the subnets so we will use it as a router to route the traffic from one subnet to another.
+<br><br>
+We will also enable **IPv4 forwarding** on the VM2 so that it can route the traffic from one subnet to another. Now we will make routing entries in VM1 and VM3 so that traffic for the other subnet goes through the VM2. Now we try to access the VM3 from the VM1 using `ping`. If the ping is successful, then the setup is working fine and we can proceed to the next step.
