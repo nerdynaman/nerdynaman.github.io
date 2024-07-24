@@ -1,8 +1,25 @@
 ---
 title: "Private Tor Network"
-layout: post
-toc: true
+summary: We will setup a private tor network with 3 relays, 1 exit node, 1 client and 1 server. This will simulate a private tor network and we will see the network traffic between the client and the server with and without tor.
+
+date : 2024-03-29
+
+authors:
+  - admin
+  - naman
+
+tags:
+  - Tor
+  - Networking
+  - Security
+  - Privacy
+  - Anonymity
+  - Docker
+
 ---
+{{< toc mobile_only=true is_open=true >}}
+
+## Introduction
 
 We will setup a private tor network with 3 relays, 1 exit node, 1 client and 1 server. We will use `chutney` to generate torrc files for the relays and then use the torrc files to setup the tor relays. We will then use the client to fetch the webpage hosted on the server first without tor and then through the tor network. We will also see the network traffic between the client and the server with and without tor.
 

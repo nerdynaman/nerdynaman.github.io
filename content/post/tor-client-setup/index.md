@@ -1,8 +1,23 @@
 ---
 title: "Tor Client Setup"
-layout: post
-toc: true
+summary: We will setup a tor client and use it to create custom tor circuits. Further we can setup the browser to use tor client through socks proxy and use the custom tor circuit to browse the internet and fetch data.
+
+date: 2024-03-29
+
+authors:
+  - admin
+  - naman
+
+tags:
+  - Tor
+  - Networking
+  - Privacy
+  - Security
 ---
+
+{{< toc mobile_only=true is_open=true >}}
+
+## Introduction
 
 We will setup a tor client and use it to create custom tor circuits. We will use `stem` library to control tor client and create custom tor circuits. We will also use `requests` library to fetch data using the custom tor circuit. We can configure the browser to use tor client through socks proxy and use the custom tor circuit to fetch data.
 
