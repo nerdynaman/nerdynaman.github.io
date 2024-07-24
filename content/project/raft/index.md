@@ -1,11 +1,17 @@
 ---
 title: Raft
-date: 2023-10-26
-external_link: https://github.com/scikit-learn/scikit-learn
+date: 2024-02-10
+external_link: https://github.com/nerdynaman/RaftConsesusAlgo/commits/main/
 tags:
-  - Hugo
-  - Wowchemy
-  - Markdown
+  - Consensus Algorithm
+  - Raft
+  - Python
+  - Grpc
+  - Distributed Systems
+  - Fault Tolerance
+  - Leader Election
+  - Log Replication
+  - State Machine Safety
 ---
 
 This project is a implementation of the Raft consensus algorithm in Python. Raft is designed to provide a robust, fault-tolerant mechanism for managing replicated logs across multiple servers. It ensures that all nodes agree on the values stored in the log, even in the presence of failures.

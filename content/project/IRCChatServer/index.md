@@ -3,7 +3,7 @@ title: IRC Chat Server
 date: 2024-01-01
 external_link: https://github.com/nerdynaman/IRCChatServer
 tags:
-    - C
+    - Network Security
     - Networking
     - Chat
     - IRC
