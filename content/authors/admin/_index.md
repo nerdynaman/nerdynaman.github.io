@@ -83,7 +83,7 @@ skills:
       - name: Django
         description: ''
         percent: 
-        icon: 
+        icon: custom/django
       - name: Message Queue
         description: ''
         percent: 
@@ -103,7 +103,7 @@ skills:
       - name: Wireshark
         description: ''
         percent: 
-        icon: custom/wireshark
+        icon: 
   # - name: Hobbies
   #   color: '#eeac02'
   #   color_border: '#f0bf23'
