@@ -87,7 +87,7 @@ work:
     company_url: ''
     company_logo: ''
     date_start: 2023-01-01
-    date_end: 2024-04-31
+    date_end: 2024-04-30
     summary: |
       Responsibilities include:
       - An e-voting system to prevent voter demographics revelation, partial vote count and ensures vote accountability.- Tested for 1 million voters over cloud by self hosting miners and fork of ethereum to store votes. 
