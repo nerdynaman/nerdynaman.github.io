@@ -66,7 +66,7 @@ skills:
         description: ''
         percent: 70
         icon: custom/docker
-      - name: K8s
+      - name: Kubernetes
         description: ''
         percent: 60
         icon: wheel
@@ -80,29 +80,33 @@ skills:
         icon: custom/grafana
   - name: 
     items:
+      - name: ''
+        description: ''
+        percent: 10
+        icon: 
       - name: Django
         description: ''
-        percent: 
-        icon: custom/django
+        percent: 10
+        icon: 
       - name: Message Queue
         description: ''
-        percent: 
+        percent: 10
         icon: 
       - name: Grpc
         description: ''
-        percent: 
+        percent: 10
         icon: 
       - name: OOPS
         description: ''
-        percent: 
+        percent: 10
         icon: custom/oops
       - name: Tor
         description: ''
-        percent: 
+        percent: 10
         icon: custom/tor
       - name: Wireshark
         description: ''
-        percent: 
+        percent: 10
         icon: 
   # - name: Hobbies
   #   color: '#eeac02'
@@ -129,8 +133,6 @@ profiles:
     label: E-mail Me
   - icon: brands/x
     url: https://twitter.com/nerdynaman
-  # - icon: brands/instagram
-  #   url: https://www.instagram.com/
   - icon: brands/github
     url: https://github.com/nerdynaman
   - icon: brands/linkedin
