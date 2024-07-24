@@ -87,11 +87,11 @@ skills:
       - name: Message Queue
         description: ''
         percent: 
-        icon: custom/message
+        icon: 
       - name: Grpc
         description: ''
         percent: 
-        icon: custom/grpc
+        icon: 
       - name: OOPS
         description: ''
         percent: 
