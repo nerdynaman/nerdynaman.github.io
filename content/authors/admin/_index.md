@@ -35,7 +35,7 @@ skills:
       - name: C/C++
         description: ''
         percent: 90
-        icon: c
+        icon: custom/c
       - name: Python
         description: ''
         percent: 80
@@ -80,6 +80,10 @@ skills:
         icon: grafana
   - name: 
     items:
+      - name: 
+        description: ''
+        percent: 
+        icon: 
       - name: Django
         description: ''
         percent: 
@@ -92,7 +96,7 @@ skills:
         description: ''
         percent: 
         icon: grpc
-      - name: Object Oriented Programming
+      - name: OOPS
         description: ''
         percent: 
         icon: object-oriented-programming
