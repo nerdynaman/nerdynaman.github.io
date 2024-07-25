@@ -158,15 +158,17 @@ education:
       GPA: 9.02/10
       
       Courses included:
-      - Database Management Systems
       - Computer Networks**
       - Operating Systems*
       - Network Systems Security*
+      - Database Management Systems
       - Distributed Systems*
-      - Advanced Programming*
-      - Advanced Algorithms*
       - Parallel Runtime for Modern Processor
       - Computer Organisation and Architecture
+      - Advanced Programming*
+      - Advanced Algorithms*
+    
+    * Grade: 10, ** Rank: 1
       
 work:
   - position: SDE Intern
