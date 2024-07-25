@@ -58,10 +58,6 @@ skills:
         icon: custom/grafana
   - name: Tools
     items:
-      - name: ''
-        description: ''
-        percent: 10
-        icon: 
       - name: Django
         description: ''
         percent: 10
