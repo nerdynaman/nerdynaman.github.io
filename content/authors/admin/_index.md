@@ -164,7 +164,7 @@ education:
       - Advanced Programming*
       - Advanced Algorithms*
       
-      * Grade: 10, ** Rank: 1
+      * * Grade: 10, ** Rank: 1
       
 work:
   - position: SDE Intern
