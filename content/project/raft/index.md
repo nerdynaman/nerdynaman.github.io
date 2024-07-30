@@ -12,9 +12,10 @@ tags:
   - Leader Election
   - Log Replication
   - State Machine Safety
+  - Research Paper Implementation
 ---
 
-This project is a implementation of the Raft consensus algorithm in Python. Raft is designed to provide a robust, fault-tolerant mechanism for managing replicated logs across multiple servers. It ensures that all nodes agree on the values stored in the log, even in the presence of failures.
+This project is a implementation of the Raft consensus algorithm in Python, [Research paper](https://raft.github.io/raft.pdf). Raft is designed to provide a robust, fault-tolerant mechanism for managing replicated logs across multiple servers. It ensures that all nodes agree on the values stored in the log, even in the presence of failures.
 
 We have implemented the following features in our Raft implementation:
 - Leader election
