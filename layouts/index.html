@@ -1,0 +1,22 @@
+{{ define "main" }}
+<section class="intro">
+  <p class="eyebrow">Backend engineering · Distributed systems</p>
+  <h1>{{ .Title }}</h1>
+  <div class="intro-copy">{{ .Content }}</div>
+  <a class="text-link" href="{{ "about/" | relURL }}">More about me <span aria-hidden="true">→</span></a>
+</section>
+<section class="home-section" aria-labelledby="selected-projects">
+  <div class="section-heading"><h2 id="selected-projects">Selected projects</h2><a href="{{ "projects/" | relURL }}">All projects <span aria-hidden="true">→</span></a></div>
+  {{ range first 2 (where site.RegularPages "Section" "project").ByDate.Reverse }}
+    <article class="project-row"><h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3><p>{{ .Params.description | default (.Summary | plainify) }}</p></article>
+  {{ end }}
+</section>
+<section class="home-section" aria-labelledby="recent-writing">
+  <div class="section-heading"><h2 id="recent-writing">Recent writing</h2><a href="{{ "post/" | relURL }}">All writing <span aria-hidden="true">→</span></a></div>
+  <ul class="entry-list compact">{{ range first 3 (where site.RegularPages "Section" "post").ByDate.Reverse }}{{ partial "entry.html" . }}{{ end }}</ul>
+</section>
+<section class="home-section" aria-labelledby="bookshelf">
+  <div class="section-heading"><h2 id="bookshelf">On my bookshelf</h2><a href="{{ "reading/" | relURL }}">Browse shelf <span aria-hidden="true">→</span></a></div>
+  <p class="muted">Books, papers, and articles I’m reading, with occasional brief notes.</p>
+</section>
+{{ end }}

@@ -1,0 +1,8 @@
+{{ with site.GetPage "/authors/admin" }}
+<section class="home-section"><h2>Experience</h2>
+{{ range .Params.work }}
+<article class="experience-entry"><h3>{{ .position }}</h3><p class="organisation">{{ .company_name }}</p><p class="meta">{{ with .date_start }}{{ time.Format "Jan 2006" . }} – {{ end }}{{ with .date_end }}{{ time.Format "Jan 2006" . }}{{ else }}Present{{ end }}</p>{{ with .summary }}<div class="prose">{{ . | markdownify }}</div>{{ end }}</article>
+{{ end }}
+</section>
+<section class="home-section"><h2>Education</h2>{{ range .Params.education }}<article class="experience-entry"><h3>{{ .area }}</h3><p>{{ .institution }}</p><p class="meta">{{ time.Format "2006" .date_start }} – {{ time.Format "2006" .date_end }}</p>{{ with .summary }}<div class="prose">{{ . | markdownify }}</div>{{ end }}</article>{{ end }}</section>
+{{ end }}

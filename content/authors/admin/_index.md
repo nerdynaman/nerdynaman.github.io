@@ -20,107 +20,12 @@ superuser: true
 highlight_name: true
 
 # Role/position/tagline
-role: Undergraduate Student, Computer Science
+role: Member of Technical Staff
 
 # Organizations/Affiliations to display in Biography blox
 organizations:
-  - name: IIIT-Delhi
-    url: https://iiitd.ac.in/
-
-# Skills
-# Add your own SVG icons to `assets/media/icons/`
-skills:
-  - name: Tools
-    items:
-      - name: Spark
-        description: ''
-        percent: 70
-        icon: custom/spark
-      - name: Git
-        description: ''
-        percent: 80
-        icon: custom/git
-      - name: Docker
-        description: ''
-        percent: 70
-        icon: custom/docker
-      - name: Kubernetes
-        description: ''
-        percent: 60
-        icon: wheel
-      - name: Airflow
-        description: ''
-        percent: 60
-        icon: custom/airflow
-      - name: Grafana
-        description: ''
-        percent: 60
-        icon: custom/grafana
-  - name: Tools
-    items:
-      - name: Django
-        description: ''
-        percent: 10
-        icon: 
-      - name: Message Queue
-        description: ''
-        percent: 10
-        icon: 
-      - name: Grpc
-        description: ''
-        percent: 10
-        icon: 
-      - name: OOPS
-        description: ''
-        percent: 10
-        icon: custom/oops
-      - name: Tor
-        description: ''
-        percent: 10
-        icon: custom/tor
-      - name: Wireshark
-        description: ''
-        percent: 10
-        icon: 
-  
-  - name: Languages
-    items:
-      - name: C /C++
-        description: ''
-        percent: 90
-        icon: code-bracket
-      - name: Python
-        description: ''
-        percent: 80
-        icon: python
-      - name: Java
-        description: ''
-        percent: 70
-        icon: custom/java
-      - name: Shell Scripting
-        description: ''
-        percent: 60
-        icon: code-bracket
-      - name: SQL
-        description: ''
-        percent: 40
-        icon: circle-stack
-  # - name: Hobbies
-  #   color: '#eeac02'
-  #   color_border: '#f0bf23'
-  #   items:
-  #     - name: Hiking
-  #       description: ''
-  #       percent: 60
-  #       icon: person-simple-walk
-  #     - name: Cats
-  #       description: ''
-  #       percent: 100
-  #       icon: cat
-  #     - name: Photography
-  #       description: ''
-  #       percent: 80
-  #       icon: camera
+  - name: Oracle Cloud Infrastructure
+    url: https://www.oracle.com/cloud/
 
 # Social network links
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
@@ -133,7 +38,7 @@ profiles:
   - icon: brands/github
     url: https://github.com/nerdynaman
   - icon: brands/linkedin
-    url: https://www.linkedin.com/in/naman-aggarwal-4078371b3/
+    url: https://www.linkedin.com/in/nerdynaman/
   # - icon: academicons/google-scholar
   #   url: https://scholar.google.com/
   # - icon: academicons/orcid
@@ -147,26 +52,21 @@ interests:
 
 education:
   - area: BTech in Computer Science and Engineering
-    institution: Indraprastha Institute of Information Technology, Delhi
+    institution: IIIT Delhi
     date_start: 2021-08-01
     date_end: 2025-04-01
-    summary: |
-      GPA: 9.02/10
-      
-      Courses included:
-      - Computer Networks**
-      - Operating Systems*
-      - Network Systems Security*
-      - Database Management Systems
-      - Distributed Systems*
-      - Parallel Runtime for Modern Processor
-      - Computer Organisation and Architecture
-      - Advanced Programming*
-      - Advanced Algorithms*
-      
-      * * Grade: 10, ** Rank: 1
-      
+
 work:
+  - position: Member of Technical Staff (MTS)
+    company_name: Oracle Cloud Infrastructure
+    date_start: 2025-06-01
+    summary: |
+      Platform engineering for the security organization.
+
+      - **Detection platform:** Contributed microservices to a configuration-driven security detection platform, including a distributed query engine for regional processing of Delta table data. Added stream-buffered ingestion of regional results into global Delta tables, reducing concurrent-write contention and retries during global aggregation.
+      - **AI on-call agent:** Built an AI agent to automate on-call workflows.
+      - **Data catalog:** Built a core data warehouse catalog to manage and query data across hot and cold storage, supporting the team's AI tooling and MCP servers.
+      - **Hot storage for security analytics:** Built an in-house solution on open-source Elasticsearch for identity, compute, and other security logs with evolving schemas. Enabled timely data access for incident investigations and reduced storage costs by 98%.
   - position: SDE Intern
     company_name: Oracle Cloud Infrastructure
     company_url: ''
@@ -179,7 +79,7 @@ work:
       - Used Delta tables to fetch summaries for past job runs. Further airflow ensures monitoring job runs periodically.
       - Grafana displays metrics as a time series graph, showing all metrics for jobs instantly saving hours of work.
   - position: Undergraduate Researcher
-    company_name: Network Security Lab, IIIT-Delhi
+    company_name: Network Security Lab, IIIT Delhi
     company_url: ''
     company_logo: ''
     date_start: 2023-01-01
@@ -189,7 +89,7 @@ work:
       - An e-voting system to prevent voter demographics revelation, partial vote count and ensures vote accountability.- Tested for 1 million voters over cloud by self hosting miners and fork of ethereum to store votes. 
       - Designed a tunnel based connectivity approach for miner anonymity using ngrok. Working on potential network threats.
   - position: Teaching Assistant
-    company_name: Advanced Programming, IIIT-Delhi
+    company_name: Advanced Programming, IIIT Delhi
     company_url: ''
     company_logo: ''
     date_start: 2023-07-01
@@ -216,4 +116,4 @@ work:
 
 ## About Me
 
-Naman Aggarwal is currently a undergraduate student at IIITD pursing his bachelors degree in CSE. He is interested in Computer Networks, Operating Systems, Distributed Systems and Security. He has worked as a SDE Intern at Oracle Cloud Infrastructure and as an Undergraduate Researcher at Network Security Lab, IIIT-Delhi. 
+Naman Aggarwal is a Member of Technical Staff at Oracle Cloud Infrastructure, working on platform engineering for the security organization. His interests include distributed systems, databases, networking, and security.

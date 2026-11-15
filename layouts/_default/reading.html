@@ -1,0 +1,16 @@
+{{ define "main" }}
+<header class="page-heading"><p class="eyebrow">My bookshelf</p><h1>{{ .Title }}</h1><p class="lead">{{ .Description }}</p></header>
+<div class="reading-entries">
+{{ range .RegularPages.ByWeight }}
+<article class="reading-entry" id="{{ .File.ContentBaseName | urlize }}">
+  <p class="eyebrow">{{ .Params.reading_kind }}{{ with .Params.status }} · {{ . }}{{ end }}</p>
+  <h2>{{ if .Params.source_url }}<a href="{{ .Params.source_url }}">{{ .Title }} ↗</a>{{ else }}{{ .Title }}{{ end }}</h2>
+  {{ with .Params.source_author }}<p class="source-reference">{{ . }}</p>{{ end }}
+  {{ with .Description }}<p>{{ . }}</p>{{ end }}
+  {{ if ne (trim .Plain " \n\r\t") "" }}<details class="reading-notes"><summary>Brief notes</summary><div class="prose">{{ .Content }}</div></details>{{ end }}
+</article>
+{{ else }}
+<p class="empty-state">I’ll add books, papers, and articles as I read.</p>
+{{ end }}
+</div>
+{{ end }}

@@ -1,0 +1,6 @@
+{{ define "main" }}
+<header class="page-heading"><p class="eyebrow">Learning by building</p><h1>{{ .Title }}</h1><p class="lead">{{ .Description }}</p></header>
+{{ range (where site.RegularPages "Section" "project").ByDate.Reverse }}
+<article class="project-row project-detail"><h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2><p>{{ .Params.description | default (.Summary | plainify) }}</p><div class="meta">{{ range first 3 .Params.tags }}<span>{{ . }}</span>{{ end }}</div><a class="text-link" href="{{ .RelPermalink }}">Read project <span aria-hidden="true">→</span></a></article>
+{{ end }}
+{{ end }}

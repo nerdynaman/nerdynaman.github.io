@@ -140,7 +140,7 @@ Now our firewall is configured and we can test the setup by accessing the web se
 python3 -m http.server 80
 ```
 
-<!-- ![ping](./img-Firewall-using-FreeBSD/VM3server.png){: style="height:250px;width:900px"} -->
+<!-- ![ping](./img-Firewall-using-FreeBSD/VM3server.png) -->
 
 ### Testing the final setup
 Now we will try to access the web server from the client using the following command:

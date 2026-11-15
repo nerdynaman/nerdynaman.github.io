@@ -1,5 +1,6 @@
 ---
 title: IRC Chat Server
+description: A multi-threaded chat server with KDC authentication, encrypted messages, and replay protection.
 date: 2024-01-01
 # external_link: https://github.com/nerdynaman/IRCChatServer
 tags:

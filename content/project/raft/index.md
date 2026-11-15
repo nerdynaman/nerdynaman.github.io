@@ -1,5 +1,6 @@
 ---
 title: Raft
+description: Consensus, replicated logs, and fault tolerance — a Raft implementation in Python.
 date: 2024-02-10
 # external_link: https://github.com/nerdynaman/RaftConsesusAlgo/commits/main/
 tags:
