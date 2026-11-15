@@ -1,0 +1,6 @@
+/public/
+/public-preview/
+/resources/
+/.hugo_build.lock
+/artifacts/
+.DS_Store

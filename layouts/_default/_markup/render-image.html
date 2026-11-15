@@ -1,0 +1,5 @@
+{{ $src := .Destination }}
+{{ $path := strings.TrimPrefix "./" (urls.Parse $src).Path }}
+{{ $image := .Page.Resources.GetMatch $path }}
+{{ with $image }}{{ $src = .RelPermalink }}{{ end }}
+<a class="image-link" href="{{ $src }}" aria-label="Expand image: {{ .Text | plainify }}"><img src="{{ $src }}" alt="{{ .Text | plainify }}" loading="lazy" decoding="async"{{ with $image }}{{ if in (slice "png" "jpeg" "gif" "webp") .MediaType.SubType }} width="{{ .Width }}" height="{{ .Height }}"{{ end }}{{ end }}{{ with .Title }} title="{{ . }}"{{ end }}></a>

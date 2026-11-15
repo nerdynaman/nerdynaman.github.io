@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>{{ if .IsHome }}{{ site.Title }} — Backend systems, explored{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+  {{ $description := .Description | default .Params.summary | default site.Params.description | plainify }}
+  <meta name="description" content="{{ $description }}">
+  <meta name="author" content="Naman Aggarwal">
+  <link rel="canonical" href="{{ .Permalink }}">
+  {{ if or .Draft hugo.IsServer }}<meta name="robots" content="noindex, nofollow">{{ end }}
+  <meta property="og:title" content="{{ .Title }}">
+  <meta property="og:description" content="{{ $description }}">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:site_name" content="{{ site.Title }}">
+  <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
+  <link rel="preload" href="{{ "fonts/lora.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ "fonts/inter.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+  {{ $css := resources.Get "css/editorial.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+  {{ with site.Home.OutputFormats.Get "RSS" }}<link rel="alternate" type="application/rss+xml" href="{{ .Permalink }}" title="Naman Aggarwal — writing and notes">{{ end }}
+  {{ $js := resources.Get "js/editorial.js" | minify | fingerprint }}
+  <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="{{ "/" | relURL }}">Naman Aggarwal</a>
+    <nav aria-label="Main navigation">
+      {{ $page := . }}
+      {{ range site.Menus.main }}
+        {{ $active := or (eq $page.RelPermalink (.URL | relURL)) (and (eq .Name "Writing") (eq $page.Section "post")) (and (eq .Name "Projects") (eq $page.Section "project")) (and (eq .Name "Reading") (eq $page.Section "reading")) (and (eq .Name "About") (eq $page.Layout "experience")) }}
+        <a href="{{ .URL | relURL }}"{{ if $active }} aria-current="page"{{ end }}>{{ .Name }}</a>
+      {{ end }}
+    </nav>
+  </header>
+  <main id="main"{{ if .IsHome }} class="home"{{ end }}>
+    {{ block "main" . }}{{ end }}
+  </main>
+  <footer class="site-footer">
+    <div><span>© {{ now.Year }} Naman Aggarwal</span><small>Writing licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a>.</small></div>
+    <nav aria-label="Social links"><a href="{{ site.Params.github }}">GitHub</a><a href="{{ site.Params.linkedin }}">LinkedIn</a><a href="mailto:{{ site.Params.email }}">Email</a><a href="{{ "index.xml" | relURL }}">RSS</a></nav>
+  </footer>
+  <dialog id="image-viewer" aria-label="Expanded article image">
+    <button type="button" class="image-close" aria-label="Close image">Close ×</button>
+    <img alt="">
+  </dialog>
+</body>
+</html>

@@ -494,7 +494,7 @@ curl -x socks4a://127.0.0.1:9000 ifconfig.io
 python3 circuitDetails.py  // to get the current circuit details to find fingerprints for building custom circuit
 python3 circuit.py  // to build custom circuit
 ```
-![demonstration](./images/4relayCustomPath.png){: style="width:100%"}
+![demonstration](./images/4relayCustomPath.png)
 
 [image](./images/4relayCustomPath.png)
 
@@ -504,13 +504,13 @@ we create a custom circuit with 5 relays along with a loop on a relay and fetch 
 
 #### Client
 
-![demonstration](./images/4relayCustomPathLoop.png){: style="width:100%"}
+![demonstration](./images/4relayCustomPathLoop.png)
 
 [image](./images/4relayCustomPathLoop.png)
 
 #### Server
 
-![demonstration](./images/4relayCustomPathLoopServer.png){: style="width:100%"}
+![demonstration](./images/4relayCustomPathLoopServer.png)
 
 [image](./images/4relayCustomPathLoopServer.png)
 
