@@ -56,4 +56,17 @@ Install `playwright-core` outside the repository and point `NODE_PATH` at that i
 
 ## Deployment
 
-GitHub Actions builds and validates pull requests. Only pushes or manual runs on `main` deploy to GitHub Pages. Production builds exclude drafts. No changes are deployed by running the local preview.
+Temporarily, GitHub Pages serves the locally built `docs/` directory on `main`. In the repository's **Settings → Pages**, set **Source: Deploy from a branch**, **Branch: main**, and **Folder: /docs**.
+
+After changing content or layouts, rebuild and validate before committing both the source changes and generated output:
+
+```sh
+hugo --minify --cleanDestinationDir --destination docs
+python3 tests/check_site.py docs
+```
+
+Use Hugo 0.126.3. Production builds exclude drafts; never use `--buildDrafts` with the tracked `docs/` directory. `static/.nojekyll` is copied into the output so Pages serves the generated site without Jekyll processing. `--cleanDestinationDir` removes obsolete generated files.
+
+The custom build-and-deploy workflow is manual-only during this arrangement. GitHub's own Pages deployment workflow still runs for branch publishing, so this does not guarantee a bypass of an account-level Actions lock.
+
+To restore automatic deployment after the lock is resolved, switch Pages' source back to **GitHub Actions** and restore the `push` (branch `main`) and `pull_request` triggers in `.github/workflows/publish.yaml`. The tracked `docs/` output can then be removed. No changes are deployed by running the local preview.

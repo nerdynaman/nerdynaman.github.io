@@ -1,0 +1,267 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light"><title>Private Tor Network · Naman Aggarwal</title>
+<meta name=description content="We will setup a private tor network with 3 relays, 1 exit node, 1 client and 1 server. This will simulate a private tor network and we will see the network traffic between the client and the server with and without tor."><meta name=author content="Naman Aggarwal"><link rel=canonical href=https://nerdynaman.github.io/post/private-tor-network/><meta property="og:title" content="Private Tor Network"><meta property="og:description" content="We will setup a private tor network with 3 relays, 1 exit node, 1 client and 1 server. This will simulate a private tor network and we will see the network traffic between the client and the server with and without tor."><meta property="og:url" content="https://nerdynaman.github.io/post/private-tor-network/"><meta property="og:site_name" content="Naman Aggarwal"><meta property="og:type" content="article"><meta name=twitter:card content="summary"><link rel=icon href=/favicon.svg type=image/svg+xml><link rel=preload href=/fonts/lora.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/inter.woff2 as=font type=font/woff2 crossorigin><link rel=stylesheet href=/css/editorial.min.d1907d1670ae20469d44509b1922cc50a0b2903592f68d61cd534f41b82e6f67.css integrity="sha256-0ZB9FnCuIEadRFCbGSLMUKCykDWS9o1hzVNPQbgub2c="><link rel=alternate type=application/rss+xml href=https://nerdynaman.github.io/index.xml title="Naman Aggarwal — writing and notes"><script src=/js/editorial.min.560dde354bf81773f4639a05a3d2a1f9b2a0855065a0d19e8646338ab9fcbca0.js integrity="sha256-Vg3eNUv4F3P0Y5oFo9Kh+bKghVBloNGehkYzirn8vKA=" defer></script></head><body><a class=skip-link href=#main>Skip to content</a><header class=site-header><a class=brand href=/>Naman Aggarwal</a><nav aria-label="Main navigation"><a href=/post/ aria-current=page>Writing</a>
+<a href=/projects/>Projects</a>
+<a href=/reading/>Reading</a>
+<a href=/about/>About</a></nav></header><main id=main><article class=article><header class=page-heading><div class=meta><a href=/post/>Writing</a>
+<time datetime=2024-03-29>29 Mar 2024</time></div><h1>Private Tor Network</h1></header><details class=contents><summary>Contents</summary><nav id=TableOfContents><ul><li><a href=#introduction>Introduction</a></li><li><a href=#machine-setup>Machine setup</a><ul><li><a href=#using-vms>Using VMs</a></li><li><a href=#using-docker>Using Docker</a></li></ul></li><li><a href=#setting-up-tor-relays>Setting up tor relays</a><ul><li><a href=#using-chutney-to-generate-torrc-files>Using chutney to generate torrc files</a></li><li><a href=#torrc-files-for-vms>torrc files for VMs</a></li><li><a href=#steps-to-generate-v3ident-and-v3author>Steps to generate V3ident and V3Author</a></li><li><a href=#running-tor-process>Running tor process</a></li></ul></li><li><a href=#experimenting-with-the-private-tor-network>Experimenting with the private tor network</a><ul><li><a href=#client>Client</a></li><li><a href=#server>Server</a></li></ul></li><li><a href=#network-traffic>Network traffic</a><ul><li><a href=#client-1>Client</a></li><li><a href=#server-1>Server</a></li></ul></li><li><a href=#some-more-tor-configs>Some more TOR configs</a><ul><li><a href=#using-tor-with-more-than-3-relays>Using tor with more than 3 relays</a></li><li><a href=#using-tor-with-more-than-3-relays-and-loops>Using tor with more than 3 relays and loops</a></li></ul></li><li><a href=#references>References</a></li></ul></nav></details><div class=prose><h2 id=introduction>Introduction</h2><p>We will setup a private tor network with 3 relays, 1 exit node, 1 client and 1 server. We will use <code>chutney</code> to generate torrc files for the relays and then use the torrc files to setup the tor relays. We will then use the client to fetch the webpage hosted on the server first without tor and then through the tor network. We will also see the network traffic between the client and the server with and without tor.</p><h2 id=machine-setup>Machine setup</h2><h3 id=using-vms>Using VMs</h3><p>We use <strong>6</strong> VMs for setting up the private tor network. The VMs are setup as follows:</p><ul><li><p><strong>1-3</strong> VM for the <strong>directory authority</strong> and hosting <strong>relays</strong></p><ul><li>relays refer to set of gaurd and middle node so any client can choose a relay as gaurd or middle node</li><li>for setting up a minimal network with 3 tor relays including exit we still need 4 VMs if we also want to host our own directory authority due to the reason, a client cant choose a node as relay in its setup if it using it as directory authority.</li></ul></li><li><p><strong>4</strong> VM for the <strong>exit node</strong></p></li><li><p><strong>5</strong> VM for the <strong>client</strong></p></li><li><p><strong>6</strong> VM for the <strong>server</strong></p></li><li><p>All VMs are configured with thier subnet as <code>192.168.0.0/24</code> and the VMs are assigned the following IP addresses:</p><ul><li><strong>VM1</strong>: <code>192.168.0.2</code></li><li><strong>VM2</strong>: <code>192.168.0.3</code></li><li><strong>VM3</strong>: <code>192.168.0.4</code></li><li><strong>VM4</strong>: <code>192.168.0.5</code></li><li><strong>VM5</strong>: <code>192.168.0.6</code></li><li><strong>VM6</strong>: <code>192.168.0.7</code></li></ul></li><li><p>For allocating static IP addresses to the VMs, we can use the following command:</p><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>sudo ifconfig eth0 &lt;ip_addr&gt;/&lt;subnet&gt; </span></span></code></pre></div></div></li><li><p>VMs networking should be configured such that they can communicate with each other. On <code>virtualbox</code> we can use <code>host-only</code> or <code>NAT</code> network for this purpose, preferably <code>host-only</code> network so that any outside network connection is not possible.</p></li></ul><p><code>Either VMs could be used or docker also works fine for setting up the network.</code></p><h3 id=using-docker>Using Docker</h3><ul><li><p>All the commands for docker should be run from the directory <a href=/post/private-tor-network/images/tor-docker.zip>tor-docker</a>.</p></li><li><p>Infra as in number of machines and their roles remain same here also.</p><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>docker build -t alpine_test .
+</span></span><span style=display:flex><span>docker compose up -d --build</span></span></code></pre></div></div></li><li><p>If you want to access any container from the host machine, you can use the following command:</p><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>docker <span style=color:#007020>exec</span> -it &lt;container_id&gt; bin/bash</span></span></code></pre></div></div></li><li><p>Since containers running tor relays start as soon as containers are live so their logs can be seen using the following command:</p><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>docker compose logs | grep &lt;container_id&gt;</span></span></code></pre></div></div></li><li><p><code>Dockerfile</code> and <code>docker-compose.yml</code> are attached along with and their required explanation is also provided in them in form of comments.</p><p><a href=/post/private-tor-network/images/docker-compose.yaml>Compose file</a>, <a href=/post/private-tor-network/images/Dockerfile>Dockerfile</a></p></li></ul><h2 id=setting-up-tor-relays>Setting up tor relays</h2><p>In order to setup the private tor network, we need to configure the <code>torrc</code> file for each VM. The <code>torrc</code> file is located at <code>/etc/tor/torrc</code>. Information like client, gaurd, middle and exit node, directory authority, etc. are configured in this file.</p><h3 id=using-chutney-to-generate-torrc-files>Using chutney to generate torrc files</h3><p>Following configs were inspired from chutney&rsquo;s torrc files. Chutney helps in setting up a minimal tor network on localhost for testing purposes. In base_dir of chutney we can find chutney config file inside <code>chutney/net</code> directory. We need to modify this to tell chutney how many relays/gaurds/middle/exit/clients we want to setup and then run the following commands to generate torrc files.</p><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>git clone https://git.torproject.org/chutney.git
+</span></span><span style=display:flex><span><span style=color:#007020>cd</span> chutney
+</span></span><span style=display:flex><span>./chutney configure networks/basic
+</span></span><span style=display:flex><span>./chutney start networks/basic
+</span></span><span style=display:flex><span>./chutney verify networks/basic</span></span></code></pre></div></div><p>After above commands, we can find the torrc files in <code>chutney/net/nodes/</code> directory.</p><p>Since these torrc are for localhost, we need to modify them to work with our VMs.</p><h3 id=torrc-files-for-vms>torrc files for VMs</h3><p><a href=/post/private-tor-network/images/torrcA>torrcRelayA</a>, <a href=/post/private-tor-network/images/torrcB>torrcRelayB</a>, <a href=/post/private-tor-network/images/torrcC>torrcRelayC</a>, <a href=/post/private-tor-network/images/torrcD>torrcExit</a>, <a href=/post/private-tor-network/images/torrcE>torrcClient</a></p><p>Here is detailed explanation of all the configurations required for various relays in the <code>torrc</code> file, specifics are mentioned in respective <code>torrc</code> files.</p><div class=code-block><pre tabindex=0><code class=language-conf data-lang=conf>TestingTorNetwork 1
+# TestingTorNetwork 1 tells tor to use the TestingDirAuthVoteGuard and TestingMinExitFlagThreshold options
+# TestingDirAuthVoteGuard * tells tor to vote for all relays as guards
+# TestingMinExitFlagThreshold 0 tells tor to give all relays the Exit flag
+# These options are only available when TestingTorNetwork is set to 1
+
+# We need at least 3 descriptors to build circuits.
+# In a 3 relay network, 0.67 &gt; 2/3, so we try hard to get 3 descriptors.
+# In larger networks, 0.67 &gt; 2/N, so we try hard to get &gt;=3 descriptors.
+PathsNeededToBuildCircuits 0.67
+# below options are set to avoid Guard stability requirements
+TestingDirAuthVoteExit *
+TestingDirAuthVoteHSDir *
+# For speeding up the consensus cycle, here vote is valid for 2 hours
+V3AuthNIntervalsValid 2
+
+# avoiding Guard stability requirements
+TestingDirAuthVoteGuard *
+# avoiding Exit bandwidth requirements
+TestingMinExitFlagThreshold 0
+
+# data directory for tor node
+DataDirectory /torDir
+# connlimit sets the maximum number of simultaneous connections that this relay will allow
+ConnLimit 60
+Nickname test000a
+# Let tor close connections gracefully before exiting
+ShutdownWaitLength 2
+# helps us to attach and test the tor process in private network
+DisableDebuggerAttachment 0
+
+# ControlPort is used to control tor process from stem scripts, useful option for client
+ControlPort 8000
+
+# shows warnings for protocol violations
+ProtocolWarnings 1
+# Log all messages including severity &#39;notice&#39; or higher
+SafeLogging 0
+# Log messages at the very high frequency in our case millisecond
+LogTimeGranularity 1
+
+# This is very important option, it tells tor to use the given directory authority as the authority for the network to get status/information about relays of the network and also upload our relay&#39;s information to the authority
+# test000a is the nickname of the directory authority
+# orport is the port on which the directory authority is listening for connections
+# v3ident is the identity key of the directory authority
+# address is the IP address of the directory authority
+# last option is the fingerprint of the directory authority
+# here we use 3 directory authorities i.e. odd number of authorities so that at any time majority of them have consensus and dont have half split consensus
+# process of generation of v3ident and node fingerprint is mentioned below
+DirAuthority test000a orport=5000 no-v2 v3ident=387760FC480CF6AA92D5F341E013FB208EC8FD19 192.168.0.2:7000 BC1A08575F04F04F1372FF7B40154AC99BC9052E
+DirAuthority test001a orport=5001 no-v2 v3ident=812A1F8C5C2719EA2FA4D547B4E15A985A9B6B00 192.168.0.3:7001 A7EEFCAFDEE3ADE163BE0F0D136A95C42C486FCD
+DirAuthority test002a orport=5002 no-v2 v3ident=BD88184E3FB42563A32A5127D215B343AEC6D759 192.168.0.4:7002 BE32764C49B25FB9649DF54B08117BA7E12C5428
+
+# SocksPort is the port on which tor listens for connections from clients if using it as a client otherwise mention 0 to disable it
+SocksPort 0
+# ORPort is the port on which tor listens for connections from other relays
+OrPort 5000
+# address on which tor listens for connections from other relays
+Address 192.168.0.2
+
+# exit nodes need to keep this as 1 otherwise every other node should keep it as 0
+ExitRelay 0
+
+
+# options regarding the dns resolution for tor node
+ServerDNSDetectHijacking 0
+ServerDNSTestAddresses
+# tor will use this file to resolve DNS queries in this case none
+ServerDNSResolvConfFile /dev/null
+# authority directory if exits on this node then will listen on this port
+DirPort 7000
+
+# marks the relay as a authority directory
+AuthoritativeDirectory 1
+# version of the authority directory
+V3AuthoritativeDirectory 1
+# contact info for the authority directory
+ContactInfo auth0@test.test
+
+# for testing enviorment assuming all relays are reachable
+AssumeReachable 1
+
+# V3AuthVotingInterval and TestingV3AuthInitialVotingInterval can be:
+#   10, 12, 15, 18, 20, ...
+# TestingV3AuthInitialVotingInterval can also be:
+#    5, 6, 8, 9
+# They both need to evenly divide 24 hours.
+
+# Initial Vote + Initial Dist must be less than Initial Interval
+# time btw votes made by authority directory
+TestingV3AuthInitialVotingInterval 20
+# delay before voting after consesus is reached
+TestingV3AuthInitialVoteDelay 4
+# delay before distributing consesus after voting
+TestingV3AuthInitialDistDelay 4
+# Vote + Dist must be less than Interval/2, because when there&#39;s no consensus,
+# tor uses Interval/2 as the voting interval.
+# for normal authority directory
+V3AuthVotingInterval 20
+V3AuthVoteDelay 4
+V3AuthDistDelay 4
+
+# specifying algorithm for consensus
+ConsensusParams cc_alg=2
+
+# for exit nodes incoming and outgoing traffic parameters are set such as 
+# helps in accepting incoming traffic for private network
+ExitPolicy accept 127.0.0.0/8:*
+# doesnt reject private network traffic
+ExitPolicyRejectPrivate 0
+ExitPolicy accept private:*
+# accept all ipv4 traffic
+ExitPolicy accept *:*</code></pre></div><h3 id=steps-to-generate-v3ident-and-v3author>Steps to generate V3ident and V3Author</h3><p>For relays with authority directory as mentioned above, we need to generate V3ident and relay fingerprint. We can use the following commands from <code>base_dir</code> mentioned in torrc to generate them.</p><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#007020>cd</span> base_dir
+</span></span><span style=display:flex><span>mkdir keys <span style=color:#666>&amp;&amp;</span> <span style=color:#007020>cd</span> keys
+</span></span><span style=display:flex><span>tor-gencert --create-identity-key -a <span style=color:#666>{</span>ip_addr<span style=color:#666>}</span>:<span style=color:#666>{</span>port_number<span style=color:#666>}</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># this is v3ident</span>
+</span></span><span style=display:flex><span>cat authority_certificate | grep fingerprint</span></span></code></pre></div></div><p>Important to remember, once you get the v3ident start the tor process and then stop it, then only the fingerprint will be generated.</p><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>cat ../fingerprint</span></span></code></pre></div></div><h3 id=running-tor-process>Running tor process</h3><p>Now torrc file is ready for the relay to be setup. We can use the following command to start the tor process. On docker, tor process starts as soon as the container is live by default.</p><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>tor -f /etc/tor/torrc</span></span></code></pre></div></div><h2 id=experimenting-with-the-private-tor-network>Experimenting with the private tor network</h2><h3 id=client>Client</h3><p>We use curl to fetch the webpage hosted on server <strong>VM6</strong> first without tor and secondly through the tor network.</p><p>Server can easily be setup using the following command:</p><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>python3 -m http.server <span style=color:#40a070>8080</span></span></span></code></pre></div></div><h4 id=without-tor>Without tor</h4><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>root@3bef94073c7b:/# curl 192.168.0.7:8080
+</span></span><span style=display:flex><span>&lt;!DOCTYPE HTML PUBLIC <span style=color:#4070a0>&#34;-//W3C//DTD HTML 4.01//EN&#34;</span> <span style=color:#4070a0>&#34;http://www.w3.org/TR/html4/strict.dtd&#34;</span>&gt;
+</span></span><span style=display:flex><span>&lt;html&gt;
+</span></span><span style=display:flex><span>&lt;head&gt;
+</span></span><span style=display:flex><span>&lt;meta http-equiv<span style=color:#666>=</span><span style=color:#4070a0>&#34;Content-Type&#34;</span> <span style=color:#bb60d5>content</span><span style=color:#666>=</span><span style=color:#4070a0>&#34;text/html; charset=utf-8&#34;</span>&gt;
+</span></span><span style=display:flex><span>&lt;title&gt;Directory listing <span style=color:#007020;font-weight:700>for</span> /&lt;/title&gt;
+</span></span><span style=display:flex><span>&lt;/head&gt;
+</span></span><span style=display:flex><span>&lt;body&gt;
+</span></span><span style=display:flex><span>&lt;h1&gt;Directory listing <span style=color:#007020;font-weight:700>for</span> /&lt;/h1&gt;
+</span></span><span style=display:flex><span>&lt;hr&gt;
+</span></span><span style=display:flex><span>&lt;ul&gt;
+</span></span><span style=display:flex><span>&lt;li&gt;&lt;a <span style=color:#bb60d5>href</span><span style=color:#666>=</span><span style=color:#4070a0>&#34;naman/&#34;</span>&gt;naman/&lt;/a&gt;&lt;/li&gt;
+</span></span><span style=display:flex><span>&lt;/ul&gt;
+</span></span><span style=display:flex><span>&lt;hr&gt;
+</span></span><span style=display:flex><span>&lt;/body&gt;
+</span></span><span style=display:flex><span>&lt;/html&gt;</span></span></code></pre></div></div><h4 id=with-tor>With tor</h4><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>root@3bef94073c7b:/# curl -x socks4a://127.0.0.1:9004 192.168.0.7:8080
+</span></span><span style=display:flex><span>&lt;!DOCTYPE HTML PUBLIC <span style=color:#4070a0>&#34;-//W3C//DTD HTML 4.01//EN&#34;</span> <span style=color:#4070a0>&#34;http://www.w3.org/TR/html4/strict.dtd&#34;</span>&gt;
+</span></span><span style=display:flex><span>&lt;html&gt;
+</span></span><span style=display:flex><span>&lt;head&gt;
+</span></span><span style=display:flex><span>&lt;meta http-equiv<span style=color:#666>=</span><span style=color:#4070a0>&#34;Content-Type&#34;</span> <span style=color:#bb60d5>content</span><span style=color:#666>=</span><span style=color:#4070a0>&#34;text/html; charset=utf-8&#34;</span>&gt;
+</span></span><span style=display:flex><span>&lt;title&gt;Directory listing <span style=color:#007020;font-weight:700>for</span> /&lt;/title&gt;
+</span></span><span style=display:flex><span>&lt;/head&gt;
+</span></span><span style=display:flex><span>&lt;body&gt;
+</span></span><span style=display:flex><span>&lt;h1&gt;Directory listing <span style=color:#007020;font-weight:700>for</span> /&lt;/h1&gt;
+</span></span><span style=display:flex><span>&lt;hr&gt;
+</span></span><span style=display:flex><span>&lt;ul&gt;
+</span></span><span style=display:flex><span>&lt;li&gt;&lt;a <span style=color:#bb60d5>href</span><span style=color:#666>=</span><span style=color:#4070a0>&#34;naman/&#34;</span>&gt;naman/&lt;/a&gt;&lt;/li&gt;
+</span></span><span style=display:flex><span>&lt;/ul&gt;
+</span></span><span style=display:flex><span>&lt;hr&gt;
+</span></span><span style=display:flex><span>&lt;/body&gt;
+</span></span><span style=display:flex><span>&lt;/html&gt;</span></span></code></pre></div></div><p><code>curl -x socks4a://{ip_addr}:{port} {url}</code> here -x is used to specify the proxy and socks4a is the protocol used for the proxy, {ip_addr} and {port} are the ip address and port of the tor relay and {url} is the url of the webpage to be fetched.</p><p><a href=/post/private-tor-network/images/clientCurl.png>screenshot</a></p><p>We can also try to fetch the webpage using by setting up custom tor circuit and attaching the stream to it using the script from previous part by changing the the url of webpage to <code>192.168.0.7:8080</code> and socks port to <code>9004</code> in the script.</p><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>root@3bef94073c7b:/# python3 setup2.py
+</span></span><span style=display:flex><span>enter number of relays: <span style=color:#40a070>3</span>
+</span></span><span style=display:flex><span>enter fingerprint: A7EEFCAFDEE3ADE163BE0F0D136A95C42C486FCD
+</span></span><span style=display:flex><span>enter fingerprint: BE32764C49B25FB9649DF54B08117BA7E12C5428
+</span></span><span style=display:flex><span>enter fingerprint: 338286351BB43B08B19CA3B5D5646B97BE35191B
+</span></span><span style=display:flex><span>Custom Circuit ID: <span style=color:#40a070>403</span>
+</span></span><span style=display:flex><span>Custom Circuit Path:
+</span></span><span style=display:flex><span> |- A7EEFCAFDEE3ADE163BE0F0D136A95C42C486FCD <span style=color:#666>(</span>test001a, 192.168.0.3<span style=color:#666>)</span>
+</span></span><span style=display:flex><span> |- BE32764C49B25FB9649DF54B08117BA7E12C5428 <span style=color:#666>(</span>test002a, 192.168.0.4<span style=color:#666>)</span>
+</span></span><span style=display:flex><span> +- 338286351BB43B08B19CA3B5D5646B97BE35191B <span style=color:#666>(</span>test003r, 192.168.0.5<span style=color:#666>)</span>
+</span></span><span style=display:flex><span>&lt;!DOCTYPE HTML PUBLIC <span style=color:#4070a0>&#34;-//W3C//DTD HTML 4.01//EN&#34;</span> <span style=color:#4070a0>&#34;http://www.w3.org/TR/html4/strict.dtd&#34;</span>&gt;
+</span></span><span style=display:flex><span>&lt;html&gt;
+</span></span><span style=display:flex><span>&lt;head&gt;
+</span></span><span style=display:flex><span>&lt;meta http-equiv<span style=color:#666>=</span><span style=color:#4070a0>&#34;Content-Type&#34;</span> <span style=color:#bb60d5>content</span><span style=color:#666>=</span><span style=color:#4070a0>&#34;text/html; charset=utf-8&#34;</span>&gt;
+</span></span><span style=display:flex><span>&lt;title&gt;Directory listing <span style=color:#007020;font-weight:700>for</span> /&lt;/title&gt;
+</span></span><span style=display:flex><span>&lt;/head&gt;
+</span></span><span style=display:flex><span>&lt;body&gt;
+</span></span><span style=display:flex><span>&lt;h1&gt;Directory listing <span style=color:#007020;font-weight:700>for</span> /&lt;/h1&gt;
+</span></span><span style=display:flex><span>&lt;hr&gt;
+</span></span><span style=display:flex><span>&lt;ul&gt;
+</span></span><span style=display:flex><span>&lt;li&gt;&lt;a <span style=color:#bb60d5>href</span><span style=color:#666>=</span><span style=color:#4070a0>&#34;naman/&#34;</span>&gt;naman/&lt;/a&gt;&lt;/li&gt;
+</span></span><span style=display:flex><span>&lt;/ul&gt;
+</span></span><span style=display:flex><span>&lt;hr&gt;
+</span></span><span style=display:flex><span>&lt;/body&gt;
+</span></span><span style=display:flex><span>&lt;/html&gt;</span></span></code></pre></div></div><p><a href=/post/private-tor-network/images/clientCurlScript.png>screenshot</a></p><h3 id=server>Server</h3><p>Logs from the server:</p><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>root@a940ce91878d:/home# python3 -m http.server <span style=color:#40a070>8080</span>
+</span></span><span style=display:flex><span>Serving HTTP on 0.0.0.0 port <span style=color:#40a070>8080</span> <span style=color:#666>(</span>http://0.0.0.0:8080/<span style=color:#666>)</span> ...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>192.168.0.6 - - <span style=color:#666>[</span>09/Mar/2024 05:11:46<span style=color:#666>]</span> <span style=color:#4070a0>&#34;GET / HTTP/1.1&#34;</span> <span style=color:#40a070>200</span> -
+</span></span><span style=display:flex><span>192.168.0.5 - - <span style=color:#666>[</span>09/Mar/2024 05:12:39<span style=color:#666>]</span> <span style=color:#4070a0>&#34;GET / HTTP/1.1&#34;</span> <span style=color:#40a070>200</span> -</span></span></code></pre></div></div><p><code>192.168.0.6</code> is the client and <code>192.168.0.5</code> is the exit node for private tor setup.</p><p><a href=/post/private-tor-network/images/server.png>screenshot</a></p><h2 id=network-traffic>Network traffic</h2><h3 id=client-1>Client</h3><h4 id=without-tor-1>Without tor</h4><div class=code-block><pre tabindex=0><code class=language-pcap data-lang=pcap>root@3bef94073c7b:/# tcpdump -n -i eth0 &#39;src host 192.168.0.7 or dst 192.168.0.7&#39;
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+12:30:28.901369 IP 192.168.0.6.35782 &gt; 192.168.0.7.8080: Flags [S], seq 815573030, win 64240
+12:30:28.901462 IP 192.168.0.6.35782 &gt; 192.168.0.7.8080: Flags [S], seq 815573030, win 64240
+12:30:28.901615 IP 192.168.0.7.8080 &gt; 192.168.0.6.35782: Flags [S.], seq 3248396185, ack 815573031, win 65160
+12:30:28.901648 IP 192.168.0.6.35782 &gt; 192.168.0.7.8080: Flags [.], ack 1, win 502
+12:30:28.901787 IP 192.168.0.6.35782 &gt; 192.168.0.7.8080: Flags [P.], seq 1:81, ack 1, win 502
+12:30:28.901817 IP 192.168.0.7.8080 &gt; 192.168.0.6.35782: Flags [.], ack 81, win 509
+12:30:28.904742 IP 192.168.0.7.8080 &gt; 192.168.0.6.35782: Flags [P.], seq 1:157, ack 81, win 509
+12:30:28.904766 IP 192.168.0.6.35782 &gt; 192.168.0.7.8080: Flags [.], ack 157, win 501
+12:30:28.904863 IP 192.168.0.7.8080 &gt; 192.168.0.6.35782: Flags [P.], seq 157:491, ack 81, win 509
+12:30:28.904869 IP 192.168.0.6.35782 &gt; 192.168.0.7.8080: Flags [.], ack 491, win 501
+12:30:28.904941 IP 192.168.0.7.8080 &gt; 192.168.0.6.35782: Flags [F.], seq 491, ack 81, win 509
+12:30:28.905194 IP 192.168.0.6.35782 &gt; 192.168.0.7.8080: Flags [F.], seq 81, ack 492, win 501
+12:30:28.905233 IP 192.168.0.7.8080 &gt; 192.168.0.6.35782: Flags [.], ack 82, win 509
+^C
+13 packets captured
+13 packets received by filter
+0 packets dropped by kernel
+root@3bef94073c7b:/#</code></pre></div><p><a href=/post/private-tor-network/images/clientNetPac.png>screenshot</a></p><h4 id=with-tor-1>With tor</h4><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-plaintext data-lang=plaintext><span style=display:flex><span>root@3bef94073c7b:/# tcpdump -i eth0 -n &#39;src host 192.168.0.3 or dst 192.168.0.3 &#39;
+</span></span><span style=display:flex><span>tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+</span></span><span style=display:flex><span>listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+</span></span><span style=display:flex><span>12:04:36.795747 IP 192.168.0.6.60400 &gt; 192.168.0.3.5001: Flags [P.], seq 3322527341:3322527877, ack 3697330821, win 501
+</span></span><span style=display:flex><span>12:04:36.795841 IP 192.168.0.3.5001 &gt; 192.168.0.6.60400: Flags [.], ack 536, win 501
+</span></span><span style=display:flex><span>12:04:36.796921 IP 192.168.0.3.5001 &gt; 192.168.0.6.60400: Flags [P.], seq 1:537, ack 536, win 501
+</span></span><span style=display:flex><span>12:04:36.796934 IP 192.168.0.6.60400 &gt; 192.168.0.3.5001: Flags [.], ack 537, win 501
+</span></span><span style=display:flex><span>12:04:36.805853 IP 192.168.0.6.60400 &gt; 192.168.0.3.5001: Flags [P.], seq 536:1072, ack 537, win 501
+</span></span><span style=display:flex><span>12:04:36.805909 IP 192.168.0.3.5001 &gt; 192.168.0.6.60400: Flags [.], ack 1072, win 501
+</span></span><span style=display:flex><span>12:04:36.818316 IP 192.168.0.3.5001 &gt; 192.168.0.6.60400: Flags [P.], seq 537:1073, ack 1072, win 501
+</span></span><span style=display:flex><span>12:04:36.818337 IP 192.168.0.6.60400 &gt; 192.168.0.3.5001: Flags [.], ack 1073, win 501
+</span></span><span style=display:flex><span>12:04:36.819313 IP 192.168.0.6.60400 &gt; 192.168.0.3.5001: Flags [P.], seq 1072:1608, ack 1073, win 501
+</span></span><span style=display:flex><span>12:04:36.819378 IP 192.168.0.3.5001 &gt; 192.168.0.6.60400: Flags [.], ack 1608, win 501
+</span></span><span style=display:flex><span>12:04:36.841672 IP 192.168.0.3.5001 &gt; 192.168.0.6.60400: Flags [P.], seq 1073:1609, ack 1608, win 501
+</span></span><span style=display:flex><span>12:04:36.841708 IP 192.168.0.6.60400 &gt; 192.168.0.3.5001: Flags [.], ack 1609, win 501
+</span></span><span style=display:flex><span>12:04:36.897029 IP 192.168.0.6.60400 &gt; 192.168.0.3.5001: Flags [P.], seq 1608:2144, ack 1609, win 501
+</span></span><span style=display:flex><span>12:04:36.908518 IP 192.168.0.3.5001 &gt; 192.168.0.6.60400: Flags [P.], seq 1609:2145, ack 2144, win 501
+</span></span><span style=display:flex><span>12:04:36.908541 IP 192.168.0.6.60400 &gt; 192.168.0.3.5001: Flags [.], ack 2145, win 501
+</span></span><span style=display:flex><span>12:04:36.909346 IP 192.168.0.6.60400 &gt; 192.168.0.3.5001: Flags [P.], seq 2144:2680, ack 2145, win 501</span></span></code></pre></div></div><p><a href=/post/private-tor-network/images/clientNetPacTor.png>screenshot</a></p><h3 id=server-1>Server</h3><h4 id=without-tor-2>Without tor</h4><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-plaintext data-lang=plaintext><span style=display:flex><span>root@a940ce91878d:/# tcpdump -n -i eth0
+</span></span><span style=display:flex><span>tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+</span></span><span style=display:flex><span>listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+</span></span><span style=display:flex><span>12:30:28.901469 IP 192.168.0.6.35782 &gt; 192.168.0.7.8080: Flags [S], seq 815573030, win 64240
+</span></span><span style=display:flex><span>12:30:28.901538 IP 192.168.0.7.8080 &gt; 192.168.0.6.35782: Flags [S.], seq 3248396185, ack 815573031, win 65160
+</span></span><span style=display:flex><span>12:30:28.901655 IP 192.168.0.6.35782 &gt; 192.168.0.7.8080: Flags [.], ack 1, win 502
+</span></span><span style=display:flex><span>12:30:28.901797 IP 192.168.0.6.35782 &gt; 192.168.0.7.8080: Flags [P.], seq 1:81, ack 1, win 502
+</span></span><span style=display:flex><span>12:30:28.901808 IP 192.168.0.7.8080 &gt; 192.168.0.6.35782: Flags [.], ack 81, win 509
+</span></span><span style=display:flex><span>12:30:28.904715 IP 192.168.0.7.8080 &gt; 192.168.0.6.35782: Flags [P.], seq 1:157, ack 81, win 509
+</span></span><span style=display:flex><span>12:30:28.904786 IP 192.168.0.6.35782 &gt; 192.168.0.7.8080: Flags [.], ack 157, win 501
+</span></span><span style=display:flex><span>12:30:28.904856 IP 192.168.0.7.8080 &gt; 192.168.0.6.35782: Flags [P.], seq 157:491, ack 81, win 509
+</span></span><span style=display:flex><span>12:30:28.904890 IP 192.168.0.6.35782 &gt; 192.168.0.7.8080: Flags [.], ack 491, win 501
+</span></span><span style=display:flex><span>12:30:28.904934 IP 192.168.0.7.8080 &gt; 192.168.0.6.35782: Flags [F.], seq 491, ack 81, win 509
+</span></span><span style=display:flex><span>12:30:28.905205 IP 192.168.0.6.35782 &gt; 192.168.0.7.8080: Flags [F.], seq 81, ack 492, win 501
+</span></span><span style=display:flex><span>12:30:28.905215 IP 192.168.0.7.8080 &gt; 192.168.0.6.35782: Flags [.], ack 82, win 509
+</span></span><span style=display:flex><span>12:30:34.215818 ARP, Request who-has 192.168.0.6 tell 192.168.0.7, length 28
+</span></span><span style=display:flex><span>12:30:34.216015 ARP, Request who-has 192.168.0.7 tell 192.168.0.6, length 28
+</span></span><span style=display:flex><span>12:30:34.216022 ARP, Reply 192.168.0.7 is-at 02:42:c0:a8:00:07, length 28
+</span></span><span style=display:flex><span>12:30:34.216026 ARP, Reply 192.168.0.6 is-at 02:42:c0:a8:00:06, length 28
+</span></span><span style=display:flex><span>^C
+</span></span><span style=display:flex><span>16 packets captured
+</span></span><span style=display:flex><span>16 packets received by filter</span></span></code></pre></div></div><p><a href=/post/private-tor-network/images/serverNetPac.png>screenshot</a></p><h4 id=with-tor-2>With tor</h4><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-plaintext data-lang=plaintext><span style=display:flex><span>root@a940ce91878d:/# tcpdump -n &#39;tcp[tcpflags] &amp; (tcp-syn|tcp-ack) != 0&#39; -i eth0
+</span></span><span style=display:flex><span>tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+</span></span><span style=display:flex><span>listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+</span></span><span style=display:flex><span>12:04:36.898132 IP 192.168.0.5.59750 &gt; 192.168.0.7.8080: Flags [S], seq 1764663336, win 64240
+</span></span><span style=display:flex><span>12:04:36.898223 IP 192.168.0.7.8080 &gt; 192.168.0.5.59750: Flags [S.], seq 3614440954, ack 1764663337, win 65160
+</span></span><span style=display:flex><span>12:04:36.898274 IP 192.168.0.5.59750 &gt; 192.168.0.7.8080: Flags [.], ack 1, win 502
+</span></span><span style=display:flex><span>12:04:36.919423 IP 192.168.0.5.59750 &gt; 192.168.0.7.8080: Flags [P.], seq 1:148, ack 1, win 502
+</span></span><span style=display:flex><span>12:04:36.919475 IP 192.168.0.7.8080 &gt; 192.168.0.5.59750: Flags [.], ack 148, win 508
+</span></span><span style=display:flex><span>12:04:36.921101 IP 192.168.0.7.8080 &gt; 192.168.0.5.59750: Flags [P.], seq 1:157, ack 148, win 508
+</span></span><span style=display:flex><span>12:04:36.921175 IP 192.168.0.5.59750 &gt; 192.168.0.7.8080: Flags [.], ack 157, win 501
+</span></span><span style=display:flex><span>12:04:36.921235 IP 192.168.0.7.8080 &gt; 192.168.0.5.59750: Flags [P.], seq 157:491, ack 148, win 508
+</span></span><span style=display:flex><span>12:04:36.921264 IP 192.168.0.5.59750 &gt; 192.168.0.7.8080: Flags [.], ack 491, win 501
+</span></span><span style=display:flex><span>12:04:36.921356 IP 192.168.0.7.8080 &gt; 192.168.0.5.59750: Flags [F.], seq 491, ack 148, win 508
+</span></span><span style=display:flex><span>12:04:36.921476 IP 192.168.0.5.59750 &gt; 192.168.0.7.8080: Flags [F.], seq 148, ack 492, win 501
+</span></span><span style=display:flex><span>12:04:36.921494 IP 192.168.0.7.8080 &gt; 192.168.0.5.59750: Flags [.], ack 149, win 508
+</span></span><span style=display:flex><span>^C
+</span></span><span style=display:flex><span>12 packets captured
+</span></span><span style=display:flex><span>12 packets received by filter
+</span></span><span style=display:flex><span>0 packets dropped by kernel
+</span></span><span style=display:flex><span>root@a940ce91878d:/#</span></span></code></pre></div></div><p><a href=/post/private-tor-network/images/serverNetPacTor.png>screenshot</a></p><h2 id=some-more-tor-configs>Some more TOR configs</h2><p>Script used to build custom tor circuit and fetch webpage is already mentioned in the previous part.</p><h3 id=using-tor-with-more-than-3-relays>Using tor with more than 3 relays</h3><p>we create a custom circuit with 4 relays and fetch ip from ifconfig.io to show that the circuit is working as expected.</p><div class=code-block><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>curl -x socks4a://127.0.0.1:9000 ifconfig.io
+</span></span><span style=display:flex><span>python3 circuitDetails.py  // to get the current circuit details to find fingerprints <span style=color:#007020;font-weight:700>for</span> building custom circuit
+</span></span><span style=display:flex><span>python3 circuit.py  // to build custom circuit</span></span></code></pre></div></div><p><a class=image-link href=/post/private-tor-network/images/4relayCustomPath.png aria-label="Expand image: demonstration"><img src=/post/private-tor-network/images/4relayCustomPath.png alt=demonstration loading=lazy decoding=async width=1804 height=1476></a></p><p><a href=/post/private-tor-network/images/4relayCustomPath.png>image</a></p><h3 id=using-tor-with-more-than-3-relays-and-loops>Using tor with more than 3 relays and loops</h3><p>we create a custom circuit with 5 relays along with a loop on a relay and fetch webpage from server that we setup in earlier section.</p><h4 id=client-2>Client</h4><p><a class=image-link href=/post/private-tor-network/images/4relayCustomPathLoop.png aria-label="Expand image: demonstration"><img src=/post/private-tor-network/images/4relayCustomPathLoop.png alt=demonstration loading=lazy decoding=async width=1996 height=1272></a></p><p><a href=/post/private-tor-network/images/4relayCustomPathLoop.png>image</a></p><h4 id=server-2>Server</h4><p><a class=image-link href=/post/private-tor-network/images/4relayCustomPathLoopServer.png aria-label="Expand image: demonstration"><img src=/post/private-tor-network/images/4relayCustomPathLoopServer.png alt=demonstration loading=lazy decoding=async width=1406 height=198></a></p><p><a href=/post/private-tor-network/images/4relayCustomPathLoopServer.png>image</a></p><h2 id=references>References</h2><ul><li><a href=https://github.com/torproject/torspec/blob/main/attic/v3-authority-howto.txt>V3ident and fingerprint</a></li></ul></div><nav class=article-tags aria-label=Topics><a href=/tags/tor/>Tor</a><a href=/tags/networking/>Networking</a><a href=/tags/security/>Security</a><a href=/tags/privacy/>Privacy</a><a href=/tags/anonymity/>Anonymity</a><a href=/tags/docker/>Docker</a></nav><aside class=related><h2>Keep exploring</h2><ul class="entry-list compact"><li class=entry><div><a class=entry-title href=/post/tor-client-setup/>Tor Client Setup</a></div><time datetime=2024-03-29>29 Mar 2024</time></li><li class=entry><div><a class=entry-title href=/post/create-firewall/>Firewall Setup using PF</a></div><time datetime=2024-02-04>04 Feb 2024</time></li><li class=entry><div><a class=entry-title href=/project/ircchatserver/>IRC Chat Server</a></div><time datetime=2024-01-01>01 Jan 2024</time></li></ul></aside></article></main><footer class=site-footer><div><span>© 2026 Naman Aggarwal</span><small>Writing licensed under <a href=https://creativecommons.org/licenses/by-nc-nd/4.0/>CC BY-NC-ND 4.0</a>.</small></div><nav aria-label="Social links"><a href=https://github.com/nerdynaman>GitHub</a><a href=https://www.linkedin.com/in/nerdynaman/>LinkedIn</a><a href=mailto:namanagg1930@gmail.com>Email</a><a href=/index.xml>RSS</a></nav></footer><dialog id=image-viewer aria-label="Expanded article image"><button type=button class=image-close aria-label="Close image">Close ×</button>
+<img alt></dialog></body></html>
