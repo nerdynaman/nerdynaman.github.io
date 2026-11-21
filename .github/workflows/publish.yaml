@@ -1,6 +1,8 @@
 name: Build and deploy portfolio
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
